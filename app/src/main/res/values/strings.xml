@@ -41,6 +41,10 @@
     <string name="password">Password</string>
     <string name="terms_condition"><![CDATA[Terms & Condition]]></string>
     <string name="username">Username</string>
+    <string name="user_name">UserName</string>
     <string name="profileicon">profileIcon</string>
     <string name="home">home</string>
+    <string name="icon">icon</string>
+    <string name="edit">Edit</string>
+    <string name="useremail">UserEmail</string>
 </resources>
