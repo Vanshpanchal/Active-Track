@@ -8,7 +8,6 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="-160dp"
@@ -29,10 +28,25 @@
             app:layout_constraintTop_toTopOf="parent" />
     </LinearLayout>
 
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/profile_shimmer"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="-30dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+        <include layout="@layout/shimmer_one" />
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/profile"
         android:layout_width="150dp"
         android:layout_height="150dp"
+        android:layout_marginTop="-30dp"
+        android:visibility="gone"
         app:cardCornerRadius="100sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,53 +62,174 @@
             android:visibility="visible" />
     </androidx.cardview.widget.CardView>
 
-    <Button
-        android:id="@+id/btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="15sp"
-        android:layout_marginTop="24dp"
-        android:text="@string/edit"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.482"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile" />
-
     <LinearLayout
+        android:id="@+id/linearLayout4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="130dp"
         android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="@+id/profile"
-        app:layout_constraintStart_toStartOf="@+id/profile"
-        app:layout_constraintTop_toBottomOf="@+id/profile">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
         <TextView
             android:id="@+id/username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/user_name"
-            android:textAllCaps="false"
             android:layout_gravity="center_horizontal"
-            android:textColor="@color/black"
+            android:text="@string/user_name"
             android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
             android:textSize="22sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/email"
             android:layout_width="wrap_content"
-            android:textAlignment="center"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/useremail"
+            android:textAlignment="center"
             android:textAllCaps="false"
             android:textColor="#6C6B6B"
             android:textSize="20sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
     </LinearLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/stats"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/height"
+            app:cardBackgroundColor="#FFFFFF"
+            app:cardCornerRadius="8dp"
+            app:cardUseCompatPadding="true"
+            app:cardElevation="4dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="8sp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/bmi"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/height_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="125"
+                android:textAlignment="center"
+                android:textColor="@color/dark_blue"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/height_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:text="@string/height_cm"
+                android:textAlignment="center"
+                android:layout_marginBottom="2sp"
+                android:textColor="@color/dark_blue"
+                android:textSize="19sp"
+                tools:ignore="RtlCompat" />
+
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/bmi"
+            app:cardBackgroundColor="#FFFFFF"
+            app:cardCornerRadius="8dp"
+            app:cardUseCompatPadding="true"
+            app:cardElevation="4dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="8sp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/weight"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/height"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/bmi_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2sp"
+                android:text="125"
+                android:textAlignment="center"
+                android:textColor="@color/dark_blue"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/bmi_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:text="@string/bmi"
+                android:layout_marginBottom="2sp"
+                android:textAlignment="center"
+                android:textColor="@color/dark_blue"
+                android:textSize="19sp"
+                tools:ignore="RtlCompat" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/weight"
+            app:cardBackgroundColor="#FFFFFF"
+            app:cardCornerRadius="8dp"
+            app:cardUseCompatPadding="true"
+            app:cardElevation="4dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="8sp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/height"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/bmi"
+            app:layout_constraintTop_toTopOf="@+id/height">
+
+            <TextView
+                android:id="@+id/weight_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2sp"
+                android:text="125"
+                android:textAlignment="center"
+                android:textColor="@color/dark_blue"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/weight_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:text="@string/weight_kg"
+                android:textAlignment="center"
+                android:textColor="@color/dark_blue"
+                android:textSize="19sp"
+                android:layout_marginBottom="2sp"
+                tools:ignore="RtlCompat" />
+        </androidx.cardview.widget.CardView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/Menus"
@@ -102,10 +237,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="2sp"
+        android:layout_marginTop="15dp"
         android:background="@color/white"
-        android:layout_marginTop="105dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile" />
+        app:layout_constraintTop_toBottomOf="@+id/stats" />
 </androidx.constraintlayout.widget.ConstraintLayout>

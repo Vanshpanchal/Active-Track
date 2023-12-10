@@ -10,6 +10,8 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
@@ -17,11 +19,15 @@ import android.widget.ArrayAdapter
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.model.ModelLoader.LoadData
+import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.example.fitnessapp.databinding.ActivityProfileBinding
 import com.google.android.material.snackbar.Snackbar
@@ -52,12 +58,12 @@ class ProfileActivity : AppCompatActivity() {
                     FirebaseStorage.getInstance().getReference("Users/" + auth.currentUser?.uid)
                 storageReference.putFile(result.data?.data!!).addOnSuccessListener {
                     Log.d("hello", "onCreate: Uploaded")
-                    profileImage()
+
                 }.addOnFailureListener {
                     Log.d("hello", "onCreate: Failed")
 
                 }
-                profileImage()
+                profile()
             }
         }
 
@@ -77,14 +83,9 @@ class ProfileActivity : AppCompatActivity() {
         editor.commit()
         val user = auth.currentUser
 //        LoadData(user!!)
+
         profileImage()
-        bindProfile.btn.setOnClickListener {
-            if (user != null) {
-                Log.d("hello", "onCreate: ${user}")
-                requestpermission()
-                profileImage()
-            }
-        }
+
 
         val MenuName: Array<String> =
             arrayOf("HISTORY", "EDIT PROFILE PIC", "RESET PASSWORD", "SUPPORT", "LOGOUT")
@@ -188,22 +189,16 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        profileImage()
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        profileImage()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        profileImage()
-    }
 
     private fun profileImage() {
+        bindProfile.profileShimmer.startShimmerAnimation()
+        val ShimmerHandler = Handler(Looper.getMainLooper())
+        ShimmerHandler.postDelayed({
+            bindProfile.profile.visibility = View.VISIBLE
+            bindProfile.profileShimmer.stopShimmerAnimation()
+            bindProfile.profileShimmer.visibility = View.GONE
+
+        }, 800)
         val user = auth.currentUser
         storageReference =
             FirebaseStorage.getInstance().reference.child("Users/${user?.uid}")
@@ -212,6 +207,58 @@ class ProfileActivity : AppCompatActivity() {
                 .load(uri)
                 .into(bindProfile.profilePic)
         }.addOnFailureListener { exception -> }
+    }
+
+    fun profile() {
+        bindProfile.profileShimmer.startShimmerAnimation()
+
+        val ShimmerHandler = Handler(Looper.getMainLooper())
+        ShimmerHandler.postDelayed({
+            bindProfile.profile.visibility = View.VISIBLE
+            bindProfile.profileShimmer.stopShimmerAnimation()
+            bindProfile.profileShimmer.visibility = View.GONE
+        }, 800)
+
+        val user = auth.currentUser
+        storageReference = FirebaseStorage.getInstance().reference.child("Users/${user?.uid}")
+
+        storageReference.downloadUrl.addOnSuccessListener { uri ->
+            // Start shimmer again if needed
+            bindProfile.profileShimmer.startShimmerAnimation()
+
+            // Load image using Glide
+            Glide.with(this)
+                .load(uri)
+                .listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        // Stop shimmer and handle failure if needed
+                        bindProfile.profileShimmer.stopShimmerAnimation()
+                        return false
+                    }
+
+                    override fun onResourceReady(
+                        resource: Drawable?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        // Image loaded, stop shimmer
+                        bindProfile.profileShimmer.stopShimmerAnimation()
+                        bindProfile.profileShimmer.visibility = View.GONE
+                        return false
+                    }
+                })
+                .into(bindProfile.profilePic)
+        }.addOnFailureListener { exception ->
+            // Handle failure if needed
+            bindProfile.profileShimmer.stopShimmerAnimation()
+        }
     }
 
     private fun checkpermissionRead() =
@@ -269,7 +316,7 @@ class ProfileActivity : AppCompatActivity() {
             for (i in grantResults.indices) {
                 if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                     Log.d("hello", "onRequestPermissionsResult: Done")
-                    profileImage()
+
                 }
             }
         }

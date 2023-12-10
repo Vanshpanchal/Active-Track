@@ -9,9 +9,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout3"
-        android:layout_marginTop="8sp"
         android:layout_width="match_parent"
         android:layout_height="55dp"
+        android:layout_marginTop="8sp"
         android:orientation="horizontal"
         android:paddingHorizontal="8dp">
 
@@ -27,12 +27,25 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/profile_shimmer"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="25sp"
+            app:layout_constraintTop_toTopOf="parent" >
+
+            <include layout="@layout/shimmer_two"/>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
         <androidx.cardview.widget.CardView
             android:id="@+id/profile"
             android:layout_width="42dp"
+            android:visibility="gone"
             android:layout_height="42dp"
-            app:cardCornerRadius="100sp"
             android:layout_marginEnd="25sp"
+            app:cardCornerRadius="100sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">

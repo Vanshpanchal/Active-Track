@@ -9,6 +9,9 @@ import android.view.View.OnScrollChangeListener
 import android.widget.RadioButton
 import com.example.fitnessapp.databinding.ActivityBmiBinding
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -21,6 +24,8 @@ class BmiActivity : AppCompatActivity() {
     private var inch: Int = 0
     private var pound: Float = 0.0f
     private var activeRadio = "Metric"
+    private var bmiValue : String = ""
+    private lateinit var firestore: FirebaseFirestore
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bindBmi = ActivityBmiBinding.inflate(layoutInflater)
@@ -32,7 +37,6 @@ class BmiActivity : AppCompatActivity() {
             supportActionBar?.title = (getString(R.string.bmi_fullform))
 
         }
-
         bindBmi?.actionbar?.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
@@ -79,7 +83,6 @@ class BmiActivity : AppCompatActivity() {
             }
         }
 
-
         bindBmi?.calculate?.setOnClickListener {
             if (activeRadio == "Metric") {
                 if (bindBmi?.height?.text.isNullOrBlank() && bindBmi?.weight?.text.isNullOrBlank()) {
@@ -93,6 +96,8 @@ class BmiActivity : AppCompatActivity() {
                     bar.show()
                 } else {
                     calculateMetricBmi()
+
+
                 }
             } else if (activeRadio == "US") {
                 if (bindBmi?.weightPounds?.text.isNullOrBlank()) {
@@ -142,6 +147,8 @@ class BmiActivity : AppCompatActivity() {
                 bindBmi?.inch?.text?.clear()
                 bindBmi?.feet?.clearFocus()
                 bindBmi?.feet?.text?.clear()
+
+                bmiValue = bmi.toString()
             } else {
                 val bar =
                     Snackbar.make(bindBmi!!.root, "Inch value should be less than 12", Snackbar.LENGTH_SHORT)
@@ -166,7 +173,7 @@ class BmiActivity : AppCompatActivity() {
 
     }
 
-    private fun calculateMetricBmi() {
+    private fun calculateMetricBmi(){
         height = bindBmi?.height?.text.toString().toFloat() / 100
         weight = bindBmi?.weight?.text.toString().toFloat()
 
@@ -183,7 +190,12 @@ class BmiActivity : AppCompatActivity() {
         bindBmi?.height?.clearFocus()
         bindBmi?.weight?.clearFocus()
         bindBmi?.weight?.text?.clear()
+
+        bmiValue = bmi.toString()
     }
 
+    private fun UploadData()
+    {
 
+    }
 }

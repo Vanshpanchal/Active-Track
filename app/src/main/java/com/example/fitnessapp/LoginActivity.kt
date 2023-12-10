@@ -12,10 +12,12 @@ import androidx.room.Database
 import com.example.fitnessapp.databinding.ActivityLoginBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
+import java.lang.Exception
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var bindLogin: ActivityLoginBinding
@@ -70,7 +72,7 @@ class LoginActivity : AppCompatActivity() {
                                 }
                                 val intent = Intent(this, SelectionActivity::class.java)
                                 startActivity(intent)
-
+                                finish()
                             } else {
                                 val bar = Snackbar.make(
                                     bindLogin.root,
@@ -78,62 +80,53 @@ class LoginActivity : AppCompatActivity() {
                                     Snackbar.LENGTH_SHORT
                                 )
                                 bar.setBackgroundTint(Color.parseColor("#001780"))
-                                bar.setAction("OK") {
+                                bar.setAction("Ok") {
                                     bar.dismiss()
+
                                 }
                                 bar.setActionTextColor(Color.parseColor("#FDFDFD"))
                                 bar.show()
                                 sendEmailVerification()
                             }
                         } else {
-                            Log.d("hello", "onCreate: ${it.exception?.message} ")
+                            when (it.exception) {
+                                is FirebaseAuthInvalidUserException -> {
+                                    val bar = Snackbar.make(
+                                        bindLogin.root,
+                                        "Email is not Register",
+                                        Snackbar.LENGTH_SHORT
+                                    )
+                                    bar.setBackgroundTint(Color.parseColor("#001780"))
+                                    bar.setAction("Ok") {
+                                        bar.dismiss()
+
+                                    }
+                                    bar.setActionTextColor(Color.parseColor("#FDFDFD"))
+                                    bar.show()
+                                }
+
+                                else -> {
+                                    val bar = Snackbar.make(
+                                        bindLogin.root,
+                                        "Invalid Credential",
+                                        Snackbar.LENGTH_SHORT
+                                    )
+                                    bar.setBackgroundTint(Color.parseColor("#001780"))
+                                    bar.setAction("Ok") {
+                                        bar.dismiss()
+
+                                    }
+                                    bar.setActionTextColor(Color.parseColor("#FDFDFD"))
+                                    bar.show()
+                                    Log.d("hello", "Auth ${it.exception}")
+                                }
+                            }
                         }
-                    }.addOnFailureListener {
-                        val bar = Snackbar.make(
-                            bindLogin.root,
-                            "Please Check Your Entered Credentials",
-                            Snackbar.LENGTH_SHORT
-                        )
-                        bar.setBackgroundTint(Color.parseColor("#001780"))
-                        bar.setAction("OK") {
-                            bar.dismiss()
-                        }
-                        bar.setActionTextColor(Color.parseColor("#FDFDFD"))
-                        bar.show()
-                        Log.d("hello", "onCreate: ${it.message} ")
                     }
 
-            } else {
-                if (!bindLogin.checkbtn.isChecked) {
-                    val bar = Snackbar.make(
-                        bindLogin.root,
-                        "Please Check The Terms & Conditions",
-                        Snackbar.LENGTH_SHORT
-                    )
-                    bar.setBackgroundTint(Color.parseColor("#001780"))
-                    bar.setAction("OK") {
-                        bar.dismiss()
-                    }
-                    bar.setActionTextColor(Color.parseColor("#FDFDFD"))
-                    bar.show()
-                } else {
-                    val bar = Snackbar.make(
-                        bindLogin.root,
-                        "Please Check Your Entered Credentials",
-                        Snackbar.LENGTH_SHORT
-                    )
-                    bar.setBackgroundTint(Color.parseColor("#001780"))
-                    bar.setAction("OK") {
-                        bar.dismiss()
-                    }
-                    bar.setActionTextColor(Color.parseColor("#FDFDFD"))
-                    bar.show()
-                    Log.d("hello", "Failed")
-                }
 
             }
         }
-
     }
 
     private fun sendEmailVerification() {
@@ -142,31 +135,14 @@ class LoginActivity : AppCompatActivity() {
             ?.addOnCompleteListener {
                 val bar = Snackbar.make(bindLogin.root, "Mail Sent", Snackbar.LENGTH_SHORT)
                 bar.setBackgroundTint(Color.parseColor("#001780"))
-                bar.setAction("Show") {
+                bar.setAction("Ok") {
                     bar.dismiss()
-                    val intent = packageManager.getLaunchIntentForPackage("com.google.android.gm")
-                    if (intent != null) {
-                        // Start the Gmail app
-                        startActivity(intent)
-                    } else {
-                        // Display a message if Gmail is not installed
-                        Toast.makeText(this, "Gmail app not installed", Toast.LENGTH_SHORT).show()
-                    }
 
                 }
                 bar.setActionTextColor(Color.parseColor("#FDFDFD"))
                 bar.show()
             }
-            ?.addOnFailureListener {
-                val bar =
-                    Snackbar.make(bindLogin.root, it.message.toString(), Snackbar.LENGTH_SHORT)
-                bar.setBackgroundTint(Color.parseColor("#001780"))
-                bar.setAction("OK") {
-                    bar.dismiss()
-                }
-                bar.setActionTextColor(Color.parseColor("#FDFDFD"))
-                bar.show()
-            }
+
     }
 
     private fun AuthenticateUser(emailAddress: String, pass: String) {
