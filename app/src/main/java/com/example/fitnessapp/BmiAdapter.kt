@@ -1,28 +1,26 @@
 package com.example.fitnessapp
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.example.fitnessapp.databinding.ActivityHistoryBinding
+import com.example.fitnessapp.databinding.ActivityStartBinding
 import com.example.fitnessapp.databinding.HistoryItemBinding
 
-class HistoryAdapter(private val items: ArrayList<String>) :
-    RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
-
-    class ViewHolder(binding: HistoryItemBinding) : RecyclerView.ViewHolder(binding.root) {
-
+class BmiAdapter(private val items: ArrayList<bmiEntry>) :
+    RecyclerView.Adapter<BmiAdapter.myViewHolder>() {
+    class myViewHolder(binding: HistoryItemBinding) : RecyclerView.ViewHolder(binding.root) {
         val main = binding.itemMain
         val serialNo = binding.serialNo
         val dateEntry = binding.date
-        val one = binding.bmi
-        val two = binding.view
+        val bmiBox = binding.bmi
+        val view = binding.view
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): myViewHolder {
+        return myViewHolder(
             HistoryItemBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
@@ -35,12 +33,13 @@ class HistoryAdapter(private val items: ArrayList<String>) :
         return items.size
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val date: String = items.get(position)
+    override fun onBindViewHolder(holder: myViewHolder, position: Int) {
+        holder.bmiBox.visibility = View.VISIBLE
+        holder.view.visibility = View.VISIBLE
+        val date = items[position].time.toString()
+        Log.d("hello", "onBindViewHolder: ${items[position].height.toString()}")
         holder.dateEntry.text = date
-        holder.one.visibility = View.GONE
-        holder.two.visibility = View.GONE
-
+        holder.bmiBox.text = items[position].bmi
 
         holder.serialNo.text = (position + 1).toString()
 

@@ -3,24 +3,26 @@ package com.example.fitnessapp
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
+import android.content.SharedPreferences
+import android.content.SharedPreferences.Editor
 import android.media.MediaPlayer
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fitnessapp.databinding.ActivityExerciseBinding
 import com.example.fitnessapp.databinding.ConfirmationDialogBinding
-import java.lang.Exception
 import java.util.Locale
 
 class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var restProgress = 0
     private var exerciseProgress = 0
-    private var restDuration: Long = 10
-    private var exerciseDuration: Long = 30
+    private var restDuration: Long = 1 // It was 10
+    private var exerciseDuration: Long = 1
+    private var exerciseTimerDuration: Int = 1
     private var restTimer: CountDownTimer? = null
     private var exerciseTimer: CountDownTimer? = null
     private var bindExercise: ActivityExerciseBinding? = null
@@ -29,6 +31,8 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var textToSpeech: TextToSpeech? = null
     private var player: MediaPlayer? = null
     private var exerciseAdapter: ExerciseAdapter? = null
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var editor: Editor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -40,6 +44,12 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
 
+        sharedPreferences = applicationContext.getSharedPreferences("Main", MODE_PRIVATE)
+        editor = sharedPreferences.edit()
+        val abc = sharedPreferences.getLong("Duration", 30)
+        Log.d("hello", "onCreate: $abc")
+        exerciseDuration = abc
+        exerciseTimerDuration = abc.toInt()
         // Initialization
 
         exerciseList = Constants.ExerciseList()
@@ -84,8 +94,8 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             exerciseList?.get(exerciseCurrentPosition)!!.getImage()
         )
         speakExerciseName(exerciseList?.get(exerciseCurrentPosition)?.getName().toString())
-        bindExercise?.progressTimer?.progress = 300
-        bindExercise?.progressTimer?.max = 30
+        bindExercise?.progressTimer?.progress = exerciseTimerDuration
+        bindExercise?.progressTimer?.max = exerciseTimerDuration
         exerciseTimer()
     }
 
@@ -124,12 +134,11 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private fun exerciseTimer() {
 
-
         exerciseTimer = object : CountDownTimer(exerciseDuration * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 exerciseProgress++
-                bindExercise?.progressTimer?.progress = 30 - exerciseProgress
-                bindExercise?.tvTimer?.text = (30 - exerciseProgress).toString()
+                bindExercise?.progressTimer?.progress = exerciseTimerDuration - exerciseProgress
+                bindExercise?.tvTimer?.text = (exerciseTimerDuration - exerciseProgress).toString()
             }
 
             @SuppressLint("NotifyDataSetChanged")
@@ -148,7 +157,6 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
 
         }.start()
-
     }
 
     override fun onInit(status: Int) {
@@ -201,7 +209,6 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     override fun onBackPressed() {
         customBackBtn()
     }
-
 
     override fun onDestroy() {
         super.onDestroy()

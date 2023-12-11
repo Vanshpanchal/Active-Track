@@ -51,6 +51,8 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var username: String
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
+    private lateinit var sharedPreferencesHealth: SharedPreferences
+    private lateinit var editorHealth: SharedPreferences.Editor
     private var galleryLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK && result.data != null) {
@@ -81,6 +83,15 @@ class ProfileActivity : AppCompatActivity() {
         bindProfile.email.text = emailAddress
         bindProfile.username.text = username
         editor.commit()
+
+        sharedPreferencesHealth =
+            applicationContext.getSharedPreferences("HEALTH-DATA", Context.MODE_PRIVATE)
+        editorHealth = sharedPreferences.edit()
+        bindProfile.bmiValue.text = sharedPreferencesHealth.getString("Bmi", "-").toString()
+        bindProfile.heightValue.text = sharedPreferencesHealth.getString("height", "-").toString()
+        bindProfile.weightValue.text = sharedPreferencesHealth.getString("weight", "-").toString()
+
+        editorHealth.commit()
         val user = auth.currentUser
 //        LoadData(user!!)
 

@@ -18,15 +18,71 @@
         app:titleTextColor="@color/dark_blue"
         tools:title="APP NAME" />
 
+    <RadioGroup
+        android:id="@+id/radio_grp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12sp"
+        android:layout_marginTop="10sp"
+        android:background="@drawable/radiobtn_grp_bg"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/actionbar">
+
+        <RadioButton
+            android:id="@+id/exercise_records"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.50"
+            android:background="@drawable/radiobtn_style"
+            android:button="@null"
+            android:checked="true"
+            android:tag="@string/exercise"
+            android:text="@string/activity"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="@drawable/radiobtn_state"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <RadioButton
+            android:id="@+id/bmi_records"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.50"
+            android:background="@drawable/radiobtn_style"
+            android:button="@null"
+            android:checked="false"
+            android:tag="BMI"
+            android:text="@string/bmi"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="@drawable/radiobtn_state"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </RadioGroup>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_records"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="8dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/actionbar" />
+        app:layout_constraintTop_toBottomOf="@+id/radio_grp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_bmi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radio_grp" />
 
     <TextView
         android:id="@+id/status"
@@ -56,7 +112,6 @@
         app:icon="@drawable/baseline_clear_all_24"
         app:iconTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-
         app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

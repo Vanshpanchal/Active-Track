@@ -11,7 +11,7 @@
     <string name="no">NO</string>
     <string name="bmi">BMI</string>
     <string name="history">History</string>
-    <string name="height_cm">Height (cm)</string>
+    <string name="height_cm">Height</string>
     <string name="weight_kg">Weight (kg)</string>
     <string name="calculate">Calculate</string>
     <string name="bmi_fullform">BODY MASS INDEX\n</string>
@@ -47,4 +47,9 @@
     <string name="icon">icon</string>
     <string name="edit">Edit</string>
     <string name="useremail">UserEmail</string>
+    <string name="exercise">EXERCISE</string>
+    <string name="activity">Activity</string>
+    <string name="_50_sec">50 sec</string>
+    <string name="_40_sec">40 sec</string>
+    <string name="_30_sec">30 sec</string>
 </resources>

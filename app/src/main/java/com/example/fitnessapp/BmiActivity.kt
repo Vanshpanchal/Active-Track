@@ -1,5 +1,7 @@
 package com.example.fitnessapp
 
+import android.content.SharedPreferences
+import android.content.SharedPreferences.Editor
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,11 +11,22 @@ import android.view.View.OnScrollChangeListener
 import android.widget.RadioButton
 import com.example.fitnessapp.databinding.ActivityBmiBinding
 import com.google.android.material.snackbar.Snackbar
+import com.google.common.cache.Weigher
+import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import org.checkerframework.checker.units.qual.Current
+import org.checkerframework.checker.units.qual.Time
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Date
 
 class BmiActivity : AppCompatActivity() {
     private var bindBmi: ActivityBmiBinding? = null
@@ -24,8 +37,11 @@ class BmiActivity : AppCompatActivity() {
     private var inch: Int = 0
     private var pound: Float = 0.0f
     private var activeRadio = "Metric"
-    private var bmiValue : String = ""
+    private var bmiValue: String = ""
     private lateinit var firestore: FirebaseFirestore
+    private lateinit var auth: FirebaseAuth
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var editor: Editor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bindBmi = ActivityBmiBinding.inflate(layoutInflater)
@@ -87,7 +103,11 @@ class BmiActivity : AppCompatActivity() {
             if (activeRadio == "Metric") {
                 if (bindBmi?.height?.text.isNullOrBlank() && bindBmi?.weight?.text.isNullOrBlank()) {
                     val bar =
-                        Snackbar.make(bindBmi!!.root, "Field should not be empty", Snackbar.LENGTH_SHORT)
+                        Snackbar.make(
+                            bindBmi!!.root,
+                            "Field should not be empty",
+                            Snackbar.LENGTH_SHORT
+                        )
                     bar.setBackgroundTint(Color.parseColor("#001780"))
                     bar.setAction("OK", View.OnClickListener {
                         bar.dismiss()
@@ -97,18 +117,22 @@ class BmiActivity : AppCompatActivity() {
                 } else {
                     calculateMetricBmi()
 
-
                 }
             } else if (activeRadio == "US") {
                 if (bindBmi?.weightPounds?.text.isNullOrBlank()) {
                     val bar =
-                        Snackbar.make(bindBmi!!.root, "Field should not be empty", Snackbar.LENGTH_SHORT)
+                        Snackbar.make(
+                            bindBmi!!.root,
+                            "Field should not be empty",
+                            Snackbar.LENGTH_SHORT
+                        )
                     bar.setBackgroundTint(Color.parseColor("#001780"))
                     bar.setAction("OK", View.OnClickListener {
                         bar.dismiss()
                     })
                     bar.setActionTextColor(Color.WHITE)
-                    bar.show()                } else {
+                    bar.show()
+                } else {
                     calculateUsBmi()
                 }
             }
@@ -128,7 +152,6 @@ class BmiActivity : AppCompatActivity() {
                 pound = bindBmi?.weightPounds?.text.toString().toFloat()
 
                 val totalInch = (feet * inchValue) + inch
-
                 val bmi = (pound / (totalInch * totalInch)) * 703
                 val shortenBmi =
                     BigDecimal(bmi.toDouble()).setScale(1, RoundingMode.HALF_EVEN).toString()
@@ -139,6 +162,16 @@ class BmiActivity : AppCompatActivity() {
 
                 bindBmi?.tvBmi?.visibility = View.VISIBLE
 
+
+
+                bmiValue = shortenBmi
+                val heightval = "$feet'$inch"
+                Log.d("hello", "calculateUsBmi: ${heightval}")
+                val weightKg =
+                    BigDecimal((pound * 0.453592)).setScale(1, RoundingMode.HALF_EVEN).toString()
+                uploadData(heightval, weightKg)
+                storingPref(bmiValue, heightval, weightKg)
+
                 bindBmi?.height?.text?.clear()
                 bindBmi?.height?.clearFocus()
                 bindBmi?.weightPounds?.clearFocus()
@@ -148,10 +181,13 @@ class BmiActivity : AppCompatActivity() {
                 bindBmi?.feet?.clearFocus()
                 bindBmi?.feet?.text?.clear()
 
-                bmiValue = bmi.toString()
             } else {
                 val bar =
-                    Snackbar.make(bindBmi!!.root, "Inch value should be less than 12", Snackbar.LENGTH_SHORT)
+                    Snackbar.make(
+                        bindBmi!!.root,
+                        "Inch value should be less than 12",
+                        Snackbar.LENGTH_SHORT
+                    )
                 bar.setBackgroundTint(Color.parseColor("#001780"))
                 bar.setAction("OK", View.OnClickListener {
                     bar.dismiss()
@@ -173,7 +209,7 @@ class BmiActivity : AppCompatActivity() {
 
     }
 
-    private fun calculateMetricBmi(){
+    private fun calculateMetricBmi() {
         height = bindBmi?.height?.text.toString().toFloat() / 100
         weight = bindBmi?.weight?.text.toString().toFloat()
 
@@ -186,16 +222,42 @@ class BmiActivity : AppCompatActivity() {
         bindBmi?.check?.visibility = View.VISIBLE
         bindBmi?.tvBmi?.visibility = View.VISIBLE
 
+        bmiValue = shortenBmi
+        uploadData(bindBmi?.height?.text.toString(), bindBmi?.weight?.text.toString())
+        storingPref(bmiValue, bindBmi?.height?.text.toString(), bindBmi?.weight?.text.toString())
         bindBmi?.height?.text?.clear()
         bindBmi?.height?.clearFocus()
         bindBmi?.weight?.clearFocus()
         bindBmi?.weight?.text?.clear()
-
-        bmiValue = bmi.toString()
     }
 
-    private fun UploadData()
-    {
+    private fun uploadData(heightval: String, weightval: String) {
+        firestore = FirebaseFirestore.getInstance()
+        auth = FirebaseAuth.getInstance()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        val current = LocalDateTime.now().format(formatter)
+        val entry = hashMapOf(
+            "bmi" to bmiValue,
+            "time" to current,
+            "timestamp" to Timestamp.now(),
+            "height" to heightval,
+            "weight" to weightval
+        )
 
+        firestore.collection("BMI").document(auth.currentUser?.uid!!).collection("MyBMI").document()
+            .set(entry).addOnSuccessListener {
+                Log.d("hello", "uploadData: Done")
+            }
+    }
+
+    private fun storingPref(Bmi: String, height: String, weight: String) {
+        Log.d("hello", "storingPref: $height $weight")
+        sharedPreferences = getSharedPreferences("HEALTH-DATA", MODE_PRIVATE)
+        editor = sharedPreferences.edit()
+        editor.clear()
+        editor.putString("Bmi", Bmi)
+        editor.putString("height", height)
+        editor.putString("weight", weight)
+        editor.commit()
     }
 }

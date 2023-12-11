@@ -12,6 +12,7 @@ class ExerciseAdapter(val items: ArrayList<ExerciseModel>) :
 
     class ViewHolder(binding: ExerciseStatusBinding) : RecyclerView.ViewHolder(binding.root) {
         val exerciseNumber = binding.exerciseNumber
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -31,7 +32,7 @@ class ExerciseAdapter(val items: ArrayList<ExerciseModel>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val model: ExerciseModel = items[position]
-//        holder.exerciseNumber.text = model.getId().toString()
+//        holder.text = model.getId().toString()
 
         when {
             model.getIsSelected() -> {

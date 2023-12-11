@@ -44,6 +44,48 @@
             android:textStyle="bold" />
     </FrameLayout>
 
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        app:layout_constraintBottom_toTopOf="@+id/ly_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fl_start">
+
+        <RadioButton
+            android:id="@+id/first"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tag="30"
+            android:checked="true"
+            android:text="@string/_30_sec"
+            android:textSize="20sp" />
+
+        <RadioButton
+            android:id="@+id/second"
+            android:layout_width="0dp"
+            android:tag="40"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="false"
+            android:text="@string/_40_sec"
+            android:textSize="20sp" />
+
+        <RadioButton
+            android:id="@+id/third"
+            android:layout_width="0dp"
+            android:tag="50"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="false"
+            android:text="@string/_50_sec"
+            android:textSize="20sp" />
+    </RadioGroup>
+
     <LinearLayout
         android:id="@+id/ly_btn"
         android:layout_width="match_parent"
