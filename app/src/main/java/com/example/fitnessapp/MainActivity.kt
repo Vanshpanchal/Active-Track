@@ -7,6 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.RadioButton
 import com.example.fitnessapp.databinding.ActivityMainBinding
+import com.google.firebase.Timestamp
+import com.google.firebase.ktx.Firebase
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,11 +26,19 @@ class MainActivity : AppCompatActivity() {
         bindMain = ActivityMainBinding.inflate(layoutInflater)
         setContentView(bindMain?.root)
 
-        sharedPreferences = getSharedPreferences("Main", MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences("ExercisePref", MODE_PRIVATE)
         editor = sharedPreferences.edit()
 
         bindMain?.flStart?.setOnClickListener {
+            val c = Calendar.getInstance()
+            val dateTime = c.time
+            val sdf = SimpleDateFormat("dd MMM yyyy HH:mm:ss", Locale.getDefault())
+            val current = sdf.format(dateTime)
             val intent = Intent(this, ExerciseActivity::class.java)
+            editor.clear()
+            editor.putLong("Duration", exercisetimer)
+            editor.putString("Start_time", current.toString())
+            editor.commit()
             startActivity(intent)
         }
 
@@ -47,9 +62,6 @@ class MainActivity : AppCompatActivity() {
                     30
                 }
             }
-            editor.clear()
-            editor.putLong("Duration", exercisetimer)
-            editor.commit()
         }
 
 

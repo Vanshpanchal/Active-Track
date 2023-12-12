@@ -44,12 +44,13 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
 
-        sharedPreferences = applicationContext.getSharedPreferences("Main", MODE_PRIVATE)
+        sharedPreferences = applicationContext.getSharedPreferences("ExercisePref", MODE_PRIVATE)
         editor = sharedPreferences.edit()
-        val abc = sharedPreferences.getLong("Duration", 30)
-        Log.d("hello", "onCreate: $abc")
-        exerciseDuration = abc
-        exerciseTimerDuration = abc.toInt()
+        val duration = sharedPreferences.getLong("Duration", 30)
+        val startDuration = sharedPreferences.getString("Start_time", "")
+        Log.d("hello", "onCreate: $duration $startDuration")
+        exerciseDuration = 1
+        exerciseTimerDuration = 1
         // Initialization
 
         exerciseList = Constants.ExerciseList()

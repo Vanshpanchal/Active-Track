@@ -11,12 +11,31 @@ import com.example.fitnessapp.databinding.HistoryItemBinding
 
 class BmiAdapter(private val items: ArrayList<bmiEntry>) :
     RecyclerView.Adapter<BmiAdapter.myViewHolder>() {
-    class myViewHolder(binding: HistoryItemBinding) : RecyclerView.ViewHolder(binding.root) {
+
+    lateinit var mylistener: onitemclickB
+
+    interface onitemclickB {
+        fun itemClickListener(position: Int)
+    }
+
+    fun onItem(listener: onitemclickB) {
+        mylistener = listener
+    }
+
+    class myViewHolder(binding: HistoryItemBinding, listener: onitemclickB) :
+        RecyclerView.ViewHolder(binding.root) {
         val main = binding.itemMain
         val serialNo = binding.serialNo
         val dateEntry = binding.date
         val bmiBox = binding.bmi
         val view = binding.view
+
+        init {
+            itemView.setOnClickListener {
+                listener.itemClickListener(adapterPosition)
+            }
+        }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): myViewHolder {
@@ -25,7 +44,7 @@ class BmiAdapter(private val items: ArrayList<bmiEntry>) :
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-            )
+            ), mylistener
         )
     }
 

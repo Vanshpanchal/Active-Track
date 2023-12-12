@@ -48,6 +48,7 @@
         android:id="@+id/radio_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="15sp"
         android:orientation="horizontal"
         android:weightSum="3"
         app:layout_constraintBottom_toTopOf="@+id/ly_btn"
@@ -60,28 +61,28 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:tag="30"
             android:checked="true"
+            android:tag="30"
             android:text="@string/_30_sec"
             android:textSize="20sp" />
 
         <RadioButton
             android:id="@+id/second"
             android:layout_width="0dp"
-            android:tag="40"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:checked="false"
+            android:tag="40"
             android:text="@string/_40_sec"
             android:textSize="20sp" />
 
         <RadioButton
             android:id="@+id/third"
             android:layout_width="0dp"
-            android:tag="50"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:checked="false"
+            android:tag="50"
             android:text="@string/_50_sec"
             android:textSize="20sp" />
     </RadioGroup>
@@ -109,6 +110,7 @@
             android:textStyle="bold"
             app:cornerRadius="8sp"
             tools:ignore="ButtonStyle" />
+
 
         <Button
             android:id="@+id/btn_history"
