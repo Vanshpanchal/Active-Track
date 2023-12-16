@@ -52,4 +52,10 @@
     <string name="_50_sec">50 sec</string>
     <string name="_40_sec">40 sec</string>
     <string name="_30_sec">30 sec</string>
+    <string name="close">close</string>
+    <string name="activity_detail">Activity Detail</string>
+    <string name="date">Date</string>
+    <string name="rep_duration">Rep Duration</string>
+    <string name="start_duration">Start Duration</string>
+    <string name="end_duration">End Duration</string>
 </resources>

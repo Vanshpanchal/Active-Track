@@ -5,15 +5,23 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.RadioButton
+import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fitnessapp.databinding.ActivityHistoryBinding
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.TextStyle
+import java.util.Locale
 
 class HistoryActivity : AppCompatActivity() {
     private var activeRadio = "EXERCISE"
@@ -21,6 +29,7 @@ class HistoryActivity : AppCompatActivity() {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
     private lateinit var bmiList: ArrayList<bmiEntry>
+    private lateinit var previewDialog: BottomSheetDialog
     private lateinit var ActivityList: ArrayList<ActivtyEntry>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +37,7 @@ class HistoryActivity : AppCompatActivity() {
         setContentView(bindHistory?.root)
 
         setSupportActionBar(bindHistory?.actionbar)
-
+        previewDialog = BottomSheetDialog(this)
         if (supportActionBar != null) {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
             supportActionBar?.title = (getString(R.string.history))
@@ -194,7 +203,46 @@ class HistoryActivity : AppCompatActivity() {
                     rec?.adapter = adapter
                     adapter.onItem(object : HistoryAdapter.onitemclick {
                         override fun itemClickListener(position: Int) {
-                            Log.d("hello", "itemClickListener: $position")
+                            val view =
+                                View.inflate(this@HistoryActivity, R.layout.activity_preview, null)
+                            previewDialog.setContentView(view)
+
+                            val date = ActivityList[position].Date
+                            val obj = date?.toDate()
+                            val timeZone = ZoneId.of("UTC")
+                            val localDateTime =
+                                LocalDateTime.ofInstant(Instant.ofEpochMilli(obj?.time!!), timeZone)
+                            val year = localDateTime.year.toString()
+                            val month = localDateTime.month.getDisplayName(
+                                TextStyle.SHORT,
+                                Locale.getDefault()
+                            ).toString()
+                            val day = localDateTime.dayOfMonth.toString()
+
+                            val exercise_date = "$day $month $year"
+                            val exercise_duration =
+                                ActivityList[position].ExerciseDuration.toString()
+                            val start_duration = ActivityList[position].StartDuration.toString()
+                            val end_duration = ActivityList[position].EndDuration.toString()
+                            val date_field = view.findViewById<TextView>(R.id.date_field)
+                            val duration_field = view.findViewById<TextView>(R.id.rep_field)
+                            val start_field = view.findViewById<TextView>(R.id.starting_field)
+                            val end_field = view.findViewById<TextView>(R.id.ending_field)
+                            val close_btn = view.findViewById<Button>(R.id.btn_Close)
+                            close_btn.setOnClickListener {
+                                previewDialog.dismiss()
+                            }
+                            duration_field.text = exercise_duration+" seconds"
+                            date_field.text = exercise_date
+                            start_field.text = start_duration
+                            end_field.text = end_duration
+                            previewDialog.show()
+
+                            Log.d(
+                                "hello",
+                                "itemClickListener: $position \"Year: $year, Month: $month, Day: $day\" "
+                            )
+
                         }
 
                     })

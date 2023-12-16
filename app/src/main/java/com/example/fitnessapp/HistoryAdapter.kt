@@ -52,7 +52,10 @@ class HistoryAdapter(private val items: ArrayList<ActivtyEntry>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 //        val date: Int = items[position]
-        holder.dateEntry.text = items[position].StartDuration
+        val date = items[position].Date
+        val obj = date?.toDate().toString()
+        val str = obj.substringBefore("G")
+        holder.dateEntry.text = str
         holder.one.visibility = View.GONE
         holder.two.visibility = View.GONE
         holder.serialNo.text = (position + 1).toString()
