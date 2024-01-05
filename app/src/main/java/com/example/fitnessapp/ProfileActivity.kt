@@ -62,16 +62,18 @@ class ProfileActivity : AppCompatActivity() {
     private var galleryLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK && result.data != null) {
+                val loading = custom_prog(this)
+                loading.start()
                 storageReference =
                     FirebaseStorage.getInstance().getReference("Users/" + auth.currentUser?.uid)
                 storageReference.putFile(result.data?.data!!).addOnSuccessListener {
                     Log.d("hello", "onCreate: Uploaded")
-
+                    galleryprofile()
+                    loading.dismiss()
                 }.addOnFailureListener {
                     Log.d("hello", "onCreate: Failed")
 
                 }
-                profile()
             }
         }
 
@@ -80,7 +82,7 @@ class ProfileActivity : AppCompatActivity() {
         bindProfile = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(bindProfile.root)
         profileDataList = arrayListOf()
-        profileDataList.sortByDescending  {
+        profileDataList.sortByDescending {
             it.timestamp
         }
         auth = FirebaseAuth.getInstance()
@@ -103,7 +105,7 @@ class ProfileActivity : AppCompatActivity() {
                     for (data in it) {
                         val obj = data.toObject(profileEntry::class.java)
                         profileDataList.add(obj)
-                        profileDataList.sortByDescending  {
+                        profileDataList.sortByDescending {
                             it.timestamp
                         }
                     }
@@ -304,6 +306,48 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    fun galleryprofile() {
+        bindProfile.profileShimmer.startShimmerAnimation()
+
+        val user = auth.currentUser
+        storageReference = FirebaseStorage.getInstance().reference.child("Users/${user?.uid}")
+
+        storageReference.downloadUrl.addOnSuccessListener { uri ->
+            // Start shimmer again if needed
+            bindProfile.profileShimmer.startShimmerAnimation()
+
+            // Load image using Glide
+            Glide.with(this).load(uri).listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    // Stop shimmer and handle failure if needed
+                    bindProfile.profileShimmer.stopShimmerAnimation()
+                    return false
+                }
+
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    // Image loaded, stop shimmer
+                    bindProfile.profileShimmer.stopShimmerAnimation()
+                    bindProfile.profileShimmer.visibility = View.GONE
+                    return false
+                }
+            }).into(bindProfile.profilePic)
+        }.addOnFailureListener { exception ->
+            // Handle failure if needed
+            bindProfile.profileShimmer.stopShimmerAnimation()
+        }
+    }
+
     private fun checkpermissionRead() = ActivityCompat.checkSelfPermission(
         this, Manifest.permission.READ_EXTERNAL_STORAGE
     ) == PackageManager.PERMISSION_GRANTED
@@ -335,7 +379,8 @@ class ProfileActivity : AppCompatActivity() {
                 val galleryIntent =
                     Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                 galleryLauncher.launch(galleryIntent)
-                profileImage()
+////                profileImage()
+//                profile()
             }
 
             if (permissiontoRequest.isNotEmpty()) {
@@ -357,6 +402,12 @@ class ProfileActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        profile()
     }
 
 

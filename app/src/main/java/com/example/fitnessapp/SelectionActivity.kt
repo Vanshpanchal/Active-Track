@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.io.File
+import kotlin.math.log
 
 class SelectionActivity : AppCompatActivity() {
     lateinit var bindSelect: ActivitySelectionBinding
@@ -33,11 +34,13 @@ class SelectionActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 //        profileImage()
-
         profile()
+
+//        profile()
         bindSelect.workout.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+            Log.d("hello", "onCreate: $bindSelect.")
         }
         bindSelect.profile.setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)
@@ -110,4 +113,13 @@ class SelectionActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        profileImage()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        profileImage()
+    }
 }
