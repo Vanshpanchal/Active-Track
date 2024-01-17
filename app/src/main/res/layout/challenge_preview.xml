@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:paddingBottom="15sp"
+    android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="35dp"
+        android:layout_height="5dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/shape_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/one"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:paddingVertical="8sp"
+        android:text="@string/_75_hard_challenge"
+        android:textAlignment="center"
+        android:textColor="?colorPrimary"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/view2" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/prog_img"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        app:cardCornerRadius="100sp"
+        android:layout_marginTop="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/one">
+
+        <ImageView
+            android:id="@+id/prog_pic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/home"
+            android:tag="Null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/baseline_person_24"
+            android:visibility="visible" />
+    </androidx.cardview.widget.CardView>
+
+
+    <CheckBox
+        android:id="@+id/task_1"
+        android:layout_marginTop="28sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="25sp"
+        android:text="@string/follow_a_healthy_diet"
+        app:layout_constraintTop_toBottomOf="@+id/prog_img" />
+
+    <CheckBox
+        android:id="@+id/task_2"
+        android:layout_marginTop="8sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="25sp"
+        android:text="@string/_2_x_45_min_workouts"
+        app:layout_constraintTop_toBottomOf="@+id/task_1" />
+
+    <CheckBox
+        android:id="@+id/task_3"
+        android:layout_marginTop="8sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="25sp"
+        android:text="@string/drink_a_gallon_of_water"
+        app:layout_constraintTop_toBottomOf="@+id/task_2" />
+
+    <CheckBox
+        android:id="@+id/task_4"
+        android:layout_marginTop="8sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="25sp"
+        android:text="@string/read_10_pages_of_non_fiction"
+        app:layout_constraintTop_toBottomOf="@+id/task_3" />
+
+    <CheckBox
+        android:id="@+id/task_5"
+        android:layout_marginTop="8sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="25sp"
+        android:text="@string/take_progress_picture"
+        app:layout_constraintTop_toBottomOf="@+id/task_4" />
+
+    <TextView
+        style="@style/Widget.Material3.TextInputEditText.OutlinedBox.Dense"
+        android:id="@+id/learning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="25dp"
+        android:layout_marginTop="15sp"
+        android:paddingHorizontal="5dp"
+        android:paddingVertical="5dp"
+        android:textColor="@color/black"
+        android:text="@string/app_name"
+        android:layout_marginBottom="25dp"
+        app:layout_constraintTop_toBottomOf="@+id/task_5"
+        tools:layout_editor_absoluteX="-25dp" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

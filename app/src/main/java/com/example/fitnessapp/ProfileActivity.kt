@@ -1,6 +1,7 @@
 package com.example.fitnessapp
 
 import android.Manifest
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -30,6 +31,8 @@ import com.bumptech.glide.load.model.ModelLoader.LoadData
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.example.fitnessapp.databinding.ActivityProfileBinding
+import com.example.fitnessapp.databinding.ConfirmationDialogBinding
+import com.example.fitnessapp.databinding.CustomProgressBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -62,14 +65,20 @@ class ProfileActivity : AppCompatActivity() {
     private var galleryLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK && result.data != null) {
-                val loading = custom_prog(this)
-                loading.start()
+//                val loading = custom_prog(this)
+//                loading.start()
+                val dialog = Dialog(this)
+                val layout = CustomProgressBinding.inflate(layoutInflater)
+                dialog.setContentView(layout.root)
+                dialog.setCanceledOnTouchOutside(false)
+                dialog.show()
                 storageReference =
                     FirebaseStorage.getInstance().getReference("Users/" + auth.currentUser?.uid)
                 storageReference.putFile(result.data?.data!!).addOnSuccessListener {
                     Log.d("hello", "onCreate: Uploaded")
                     galleryprofile()
-                    loading.dismiss()
+//                    loading.dismiss()
+                    dialog.dismiss()
                 }.addOnFailureListener {
                     Log.d("hello", "onCreate: Failed")
 
@@ -145,9 +154,17 @@ class ProfileActivity : AppCompatActivity() {
 
 
         val MenuName: Array<String> =
-            arrayOf("HISTORY", "EDIT PROFILE PIC", "RESET PASSWORD", "SUPPORT", "LOGOUT")
+            arrayOf(
+                "HISTORY",
+                "75 HARD CHALLENGE",
+                "EDIT PROFILE PIC",
+                "RESET PASSWORD",
+                "SUPPORT",
+                "LOGOUT"
+            )
         val IconID: Array<Int> = arrayOf(
             R.drawable.baseline_history_24,
+            R.drawable.baseline_fitness_center_24,
             R.drawable.baseline_account_circle_24,
             R.drawable.baseline_lock_reset_24,
             R.drawable.baseline_support_agent_24,
@@ -165,7 +182,7 @@ class ProfileActivity : AppCompatActivity() {
         adapter.onitem(object : MenuAdapter.onitemclick {
             override fun itemclicklistener(position: Int) {
                 when (position) {
-                    i -> {
+                    2 -> {
                         if (user != null) {
                             Log.d("hello", "onCreate: ${user}")
                             requestpermission()
@@ -173,12 +190,17 @@ class ProfileActivity : AppCompatActivity() {
                         }
                     }
 
+                    1 -> {
+                        intent = Intent(this@ProfileActivity, challengeAct::class.java)
+                        startActivity(intent)
+                    }
+
                     0 -> {
                         intent = Intent(this@ProfileActivity, HistoryActivity::class.java)
                         startActivity(intent)
                     }
 
-                    2 -> {
+                    3 -> {
                         if (bindProfile.email.text.toString().isNotEmpty()) {
                             Firebase.auth.sendPasswordResetEmail(bindProfile.email.text.toString())
                                 .addOnSuccessListener {
@@ -207,7 +229,7 @@ class ProfileActivity : AppCompatActivity() {
                         }
                     }
 
-                    4 -> {
+                    5 -> {
                         editor.clear()
                         editor.commit()
                         auth.signOut()
