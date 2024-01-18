@@ -51,9 +51,15 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var bindProfile: ActivityProfileBinding
     private lateinit var storageReference: StorageReference
     private lateinit var db: DatabaseReference
+    private lateinit var fsStore: FirebaseFirestore
     var BmiValue = ""
     var HeightValue = ""
     var WeightValue = ""
+    private val PREFS_NAME = "StreakPrefs"
+    private val STREAK_KEY = "streak"
+    private val shared_Preferences by lazy {
+        getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    }
     private lateinit var fs: FirebaseFirestore
     private lateinit var emailAddress: String
     private lateinit var profileDataList: ArrayList<profileEntry>
@@ -95,6 +101,7 @@ class ProfileActivity : AppCompatActivity() {
             it.timestamp
         }
         auth = FirebaseAuth.getInstance()
+        fsStore = FirebaseFirestore.getInstance()
         sharedPreferences =
             applicationContext.getSharedPreferences("USERDATA", Context.MODE_PRIVATE)
         editor = sharedPreferences.edit()
@@ -191,8 +198,7 @@ class ProfileActivity : AppCompatActivity() {
                     }
 
                     1 -> {
-                        intent = Intent(this@ProfileActivity, challengeAct::class.java)
-                        startActivity(intent)
+                        streakdata()
                     }
 
                     0 -> {
@@ -232,6 +238,7 @@ class ProfileActivity : AppCompatActivity() {
                     5 -> {
                         editor.clear()
                         editor.commit()
+                        shared_Preferences.edit().putInt(STREAK_KEY, 0).apply()
                         auth.signOut()
                         intent = Intent(this@ProfileActivity, WelcomeActivity::class.java)
                         startActivity(intent)
@@ -426,6 +433,53 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+
+    fun streakdata(streak: Int = 0, sts: Boolean = false) {
+        val streakEntry = hashMapOf(
+            "Streak" to streak,
+            "Status" to sts
+        )
+        fsStore.collection("Streak").document(auth.currentUser?.uid!!)
+            .collection("mystreak").document(auth.currentUser?.uid!! + "Streak")
+            .get()
+            .addOnCompleteListener { it ->
+                if (it.isSuccessful) {
+                    val result = it.result
+                    if (result != null && result.exists()) {
+                        intent = Intent(this@ProfileActivity, challengeAct::class.java)
+                        startActivity(intent)
+                    } else {
+                        val dialog = Dialog(this@ProfileActivity)
+                        val layout = ConfirmationDialogBinding.inflate(layoutInflater)
+                        dialog.setContentView(layout.root)
+                        dialog.setCanceledOnTouchOutside(false)
+                        dialog.show()
+                        layout.no.setOnClickListener {
+                            dialog.dismiss()
+                            Log.d("Btn", "No Clicked")
+                        }
+                        layout.yes.setOnClickListener {
+                            intent = Intent(this@ProfileActivity, challengeAct::class.java)
+                            startActivity(intent)
+                            dialog.dismiss()
+
+
+                            val intStreakEntry = hashMapOf(
+                                "Streak" to 0,
+                                "Status" to false
+                            )
+                            fsStore.collection("Streak").document(auth.currentUser?.uid!!)
+                                .collection("mystreak").document(auth.currentUser?.uid!! + "Streak")
+                                .set(intStreakEntry).addOnCompleteListener {
+                                    Log.d("75", "streakdata: Done")
+                                }
+                        }
+
+                    }
+                }
+
+            }
+    }
 
     override fun onResume() {
         super.onResume()

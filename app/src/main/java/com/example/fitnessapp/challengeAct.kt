@@ -36,6 +36,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.getField
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -93,24 +94,34 @@ class challengeAct : AppCompatActivity() {
                     .collection("mychallenge")
                     .whereEqualTo("Date", date).get().addOnSuccessListener { outcome ->
                         if (outcome.isEmpty) {
+                            fsStore.collection("Streak").document(auth.currentUser?.uid!!)
+                                .collection("mystreak").document(auth.currentUser?.uid!! + "Streak")
+                                .get().addOnSuccessListener { it ->
+                                    if (it.exists()) {
+                                        val streakInt = it.getField<Int>("Streak")
+                                        Log.d("75", "Loadimg: $streakInt")
 
-                            storageReference =
-                                FirebaseStorage.getInstance()
-                                    .getReference("Challenge/" + auth.currentUser?.uid)
-                                    .child(
-                                        "Day$streak"
-                                    )
-                            storageReference.putFile(result.data?.data!!).addOnSuccessListener {
+                                        storageReference =
+                                            FirebaseStorage.getInstance()
+                                                .getReference("Challenge/" + auth.currentUser?.uid)
+                                                .child(
+                                                    "Day$streakInt"
+                                                )
+                                        storageReference.putFile(result.data?.data!!)
+                                            .addOnSuccessListener {
 
-                                val s = getCurrentStreak()
-                                Loadimg(view, s)
-                                Log.d("hello", "onCreate: Uploaded")
-                                view.findViewById<ImageView>(R.id.prog_pic).tag = "Done"
-                                dialog.dismiss()
-                            }.addOnFailureListener {
-                                Log.d("hello", "onCreate: Failed")
+                                                val s = getCurrentStreak()
+                                                Loadimg(view, s)
+                                                Log.d("hello", "onCreate: Uploaded")
+                                                view.findViewById<ImageView>(R.id.prog_pic).tag =
+                                                    "Done"
+                                                dialog.dismiss()
+                                            }
+                                    }
+                                }.addOnFailureListener {
+                                    Log.d("hello", "onCreate: Failed")
 
-                            }
+                                }
                         } else {
                             Log.d("75", "Fitness activity for today already logged")
                             dialog.dismiss()
@@ -234,44 +245,52 @@ class challengeAct : AppCompatActivity() {
 
     fun Loadimg(view: View, Streak: Int) {
 //        .profileShimmer.startShimmerAnimation()
+        fsStore.collection("Streak").document(auth.currentUser?.uid!!)
+            .collection("mystreak").document(auth.currentUser?.uid!! + "Streak")
+            .get().addOnSuccessListener { it ->
+                if (it.exists()) {
+                    val streakInt = it.getField<Int>("Streak")
+                    Log.d("75", "Loadimg: $streakInt")
 
-        val user = auth.currentUser
-        storageReference =
-            FirebaseStorage.getInstance().reference.child("Challenge/${auth.currentUser?.uid}/Day$Streak")
+                    val user = auth.currentUser
+                    storageReference =
+                        FirebaseStorage.getInstance().reference.child("Challenge/${auth.currentUser?.uid}/Day$streakInt")
 
 
-        storageReference.downloadUrl.addOnSuccessListener { uri ->
-            // Start shimmer again if needed
+                    storageReference.downloadUrl.addOnSuccessListener { uri ->
+                        // Start shimmer again if needed
 //            bindProfile.profileShimmer.startShimmerAnimation()
 
-            // Load image using Glide
-            Glide.with(this).load(uri).listener(object : RequestListener<Drawable> {
-                override fun onLoadFailed(
-                    e: GlideException?,
-                    model: Any?,
-                    target: Target<Drawable>?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    // Stop shimmer and handle failure if needed
+                        // Load image using Glide
+                        Glide.with(this).load(uri).listener(object : RequestListener<Drawable> {
+                            override fun onLoadFailed(
+                                e: GlideException?,
+                                model: Any?,
+                                target: Target<Drawable>?,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                // Stop shimmer and handle failure if needed
 //                    bindProfile.profileShimmer.stopShimmerAnimation()
-                    return false
-                }
+                                return false
+                            }
 
-                override fun onResourceReady(
-                    resource: Drawable?,
-                    model: Any?,
-                    target: Target<Drawable>?,
-                    dataSource: DataSource?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    // Image loaded, stop shimmer
-                    return false
-                }
-            }).into(view.findViewById(R.id.prog_pic))
-        }.addOnFailureListener { exception ->
-            // Handle failure if needed
+                            override fun onResourceReady(
+                                resource: Drawable?,
+                                model: Any?,
+                                target: Target<Drawable>?,
+                                dataSource: DataSource?,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                // Image loaded, stop shimmer
+                                return false
+                            }
+                        }).into(view.findViewById(R.id.prog_pic))
+                    }.addOnFailureListener { exception ->
+                        // Handle failure if needed
 //            bindProfile.profileShimmer.stopShimmerAnimation()
-        }
+                    }
+                }
+            }
     }
 
     fun uploadData(view: View, streak: Int) {
@@ -305,7 +324,24 @@ class challengeAct : AppCompatActivity() {
                     fsStore.collection("Challenge").document(auth.currentUser?.uid!!)
                         .collection("mychallenge")
                         .document().set(data).addOnSuccessListener {
+
+                            fsStore.collection("Streak").document(auth.currentUser?.uid!!)
+                                .collection("mystreak").document(auth.currentUser?.uid!! + "Streak")
+                                .get().addOnSuccessListener { it ->
+                                    if (it.exists()) {
+                                        val getstreak = it.getField<Int>("Streak")
+                                        if (getstreak != null) {
+                                            if (getstreak == 74) {
+                                                streakdata(getstreak + 1, true)
+                                            } else {
+                                                streakdata(getstreak + 1, false)
+                                            }
+                                        }
+                                        Log.d("75", "Loadimg: $getstreak")
+                                    }
+                                }
                             Log.d("75", "uploadToStore: Done")
+                            getData()
                         }
                 } else {
                     Log.d("75", "Fitness activity for today already logged")
@@ -319,20 +355,21 @@ class challengeAct : AppCompatActivity() {
 
     fun getData() {
         fsStore = FirebaseFirestore.getInstance()
-        auth = FirebaseAuth.getInstance()
+//        auth = FirebaseAuth.getInstance()
 
-            fsStore.collection("Challenge").document(auth.currentUser?.uid!!)
-                .collection("mychallenge").get().addOnSuccessListener { it ->
-                    if (!it.isEmpty) {
-                        for (data in it) {
-                            val obj = data.toObject(challengeEntry::class.java)
-                            if (obj != null) {
-                                list.add(obj)
-                            }
+        fsStore.collection("Challenge").document(auth.currentUser?.uid!!)
+            .collection("mychallenge").get().addOnSuccessListener { it ->
+                if (!it.isEmpty) {
+                    list.clear()
+                    for (data in it) {
+                        val obj = data.toObject(challengeEntry::class.java)
+                        if (obj != null) {
+                            list.add(obj)
                         }
-                        val rec = binding.rvChallenge
-                        val adapter = challengeAdapter(list)
-                        rec.adapter = adapter
+                    }
+                    val rec = binding.rvChallenge
+                    val adapter = challengeAdapter(list)
+                    rec.adapter = adapter
 
                     adapter.onItem(object : challengeAdapter.onitemclick {
                         override fun itemClickListener(position: Int) {
@@ -372,6 +409,38 @@ class challengeAct : AppCompatActivity() {
                         }
 
                     })
+                }
+
+            }
+    }
+
+    fun streakdata(streak: Int = 0, sts: Boolean = false) {
+        val streakEntry = hashMapOf(
+            "Streak" to streak,
+            "Status" to sts
+        )
+        fsStore.collection("Streak").document(auth.currentUser?.uid!!)
+            .collection("mystreak").document(auth.currentUser?.uid!! + "Streak").get()
+            .addOnCompleteListener { it ->
+                if (it.isSuccessful) {
+                    val result = it.result
+                    if (result != null && result.exists()) {
+                        fsStore.collection("Streak").document(auth.currentUser?.uid!!)
+                            .collection("mystreak").document(auth.currentUser?.uid!! + "Streak")
+                            .set(streakEntry).addOnCompleteListener {
+                                Log.d("75", "streakdata: Updated")
+                            }
+                    } else {
+                        val intStreakEntry = hashMapOf(
+                            "Streak" to 0,
+                            "Status" to false
+                        )
+                        fsStore.collection("Streak").document(auth.currentUser?.uid!!)
+                            .collection("mystreak").document(auth.currentUser?.uid!! + "Streak")
+                            .set(intStreakEntry).addOnCompleteListener {
+                                Log.d("75", "streakdata: Done")
+                            }
+                    }
                 }
 
             }
