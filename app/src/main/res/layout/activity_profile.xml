@@ -32,20 +32,47 @@
         android:id="@+id/profile_shimmer"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_marginTop="-30dp"
+        android:layout_marginTop="-40dp"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout">
-
         <include layout="@layout/shimmer_one" />
     </com.facebook.shimmer.ShimmerFrameLayout>
+
+    <LinearLayout
+        android:id="@+id/streak_container"
+        android:background="@drawable/streak_bg"
+        android:paddingHorizontal="6sp"
+        android:layout_width="0dp"
+        android:paddingVertical="2sp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="-15dp"
+        android:layout_marginTop="80dp"
+        app:layout_constraintStart_toEndOf="@+id/profile"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+        <TextView
+            android:id="@+id/streak_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8sp"
+            android:text="@string/zero"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_gravity="center"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/streak_icon" />
+    </LinearLayout>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/profile"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_marginTop="-30dp"
+        android:layout_marginTop="-40dp"
         android:visibility="gone"
         app:cardCornerRadius="100sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -110,14 +137,14 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/height"
-            app:cardBackgroundColor="#FFFFFF"
-            app:cardCornerRadius="8dp"
-            app:cardUseCompatPadding="true"
-            app:cardElevation="4dp"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginHorizontal="8sp"
             android:orientation="vertical"
+            app:cardBackgroundColor="#FFFFFF"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/bmi"
             app:layout_constraintHorizontal_bias="0.5"
@@ -128,7 +155,7 @@
                 android:id="@+id/height_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="125"
+                android:text="@string/dash"
                 android:textAlignment="center"
                 android:textColor="@color/dark_blue"
                 android:textSize="25sp"
@@ -139,9 +166,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
+                android:layout_marginBottom="2sp"
                 android:text="@string/height_cm"
                 android:textAlignment="center"
-                android:layout_marginBottom="2sp"
                 android:textColor="@color/dark_blue"
                 android:textSize="19sp"
                 tools:ignore="RtlCompat" />
@@ -151,14 +178,14 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/bmi"
-            app:cardBackgroundColor="#FFFFFF"
-            app:cardCornerRadius="8dp"
-            app:cardUseCompatPadding="true"
-            app:cardElevation="4dp"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginHorizontal="8sp"
             android:orientation="vertical"
+            app:cardBackgroundColor="#FFFFFF"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/weight"
             app:layout_constraintHorizontal_bias="0.5"
@@ -170,18 +197,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2sp"
-                android:text="125"
+                android:text="@string/dash"
                 android:textAlignment="center"
                 android:textColor="@color/dark_blue"
                 android:textSize="25sp"
                 android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/bmi_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:text="@string/bmi"
                 android:layout_marginBottom="2sp"
+                android:text="@string/bmi"
                 android:textAlignment="center"
                 android:textColor="@color/dark_blue"
                 android:textSize="19sp"
@@ -190,14 +218,14 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/weight"
-            app:cardBackgroundColor="#FFFFFF"
-            app:cardCornerRadius="8dp"
-            app:cardUseCompatPadding="true"
-            app:cardElevation="4dp"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginHorizontal="8sp"
             android:orientation="vertical"
+            app:cardBackgroundColor="#FFFFFF"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="true"
             app:layout_constraintBottom_toBottomOf="@+id/height"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -209,7 +237,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2sp"
-                android:text="125"
+                android:text="@string/dash"
                 android:textAlignment="center"
                 android:textColor="@color/dark_blue"
                 android:textSize="25sp"
@@ -220,11 +248,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
+                android:layout_marginBottom="2sp"
                 android:text="@string/weight_kg"
                 android:textAlignment="center"
                 android:textColor="@color/dark_blue"
                 android:textSize="19sp"
-                android:layout_marginBottom="2sp"
                 tools:ignore="RtlCompat" />
         </androidx.cardview.widget.CardView>
 
@@ -237,11 +265,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="2sp"
-        android:nestedScrollingEnabled="false"
         android:layout_marginTop="15dp"
         android:background="@color/white"
+        android:nestedScrollingEnabled="false"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/stats" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.050890584" />
 </androidx.constraintlayout.widget.ConstraintLayout>

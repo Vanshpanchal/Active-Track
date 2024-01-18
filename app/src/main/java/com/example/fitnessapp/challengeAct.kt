@@ -41,6 +41,7 @@ import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import kotlin.random.Random
@@ -143,6 +144,9 @@ class challengeAct : AppCompatActivity() {
         if (supportActionBar != null) {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
             supportActionBar?.title = (getString(R.string._75_hard_challenge))
+        }
+        binding.actionbar.setNavigationOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
         }
         bottomDialog = BottomSheetDialog(this)
         auth = FirebaseAuth.getInstance()
@@ -321,12 +325,26 @@ class challengeAct : AppCompatActivity() {
         fsStore.collection("Challenge").document(auth.currentUser?.uid!!).collection("mychallenge")
             .whereEqualTo("Date", date).get().addOnSuccessListener { result ->
                 if (result.isEmpty) {
+//                    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+//                    val currentDate = Date()
+//                    val calendar = Calendar.getInstance()
+//                    calendar.time = currentDate
+//                    calendar.add(Calendar.DAY_OF_YEAR, -1)
+//                    val yesterdayDate = calendar.time
+//                    val yesterdayFormattedDate = dateFormat.format(yesterdayDate)
+//                    fsStore.collection("Challenge").document(auth.currentUser?.uid!!)
+//                        .collection("mychallenge")
+//                        .whereEqualTo("Date", yesterdayFormattedDate).get()
+//                        .addOnSuccessListener { yesterday ->
+//                            if (!yesterday.isEmpty) {
                     fsStore.collection("Challenge").document(auth.currentUser?.uid!!)
                         .collection("mychallenge")
                         .document().set(data).addOnSuccessListener {
 
-                            fsStore.collection("Streak").document(auth.currentUser?.uid!!)
-                                .collection("mystreak").document(auth.currentUser?.uid!! + "Streak")
+                            fsStore.collection("Streak")
+                                .document(auth.currentUser?.uid!!)
+                                .collection("mystreak")
+                                .document(auth.currentUser?.uid!! + "Streak")
                                 .get().addOnSuccessListener { it ->
                                     if (it.exists()) {
                                         val getstreak = it.getField<Int>("Streak")
@@ -339,7 +357,12 @@ class challengeAct : AppCompatActivity() {
                                         }
                                         Log.d("75", "Loadimg: $getstreak")
                                     }
+//                                            }
                                 }
+//                            }else{ // hello world
+//                                Log.d("75", "Streak Broken")
+//
+//                            }
                             Log.d("75", "uploadToStore: Done")
                             getData()
                         }

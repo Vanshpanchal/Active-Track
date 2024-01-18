@@ -20,7 +20,7 @@ import java.util.Locale
 class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var restProgress = 0
     private var exerciseProgress = 0
-    private var restDuration: Long = 1 // It was 10
+    private var restDuration: Long = 1 // Actual It was 10 , for debug it is change to 1
     private var exerciseDuration: Long = 1
     private var exerciseTimerDuration: Int = 1
     private var restTimer: CountDownTimer? = null
@@ -49,9 +49,13 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         val duration = sharedPreferences.getLong("Duration", 30)
         val startDuration = sharedPreferences.getString("Start_time", "")
         Log.d("hello", "onCreate: $duration $startDuration")
+        // debug
         exerciseDuration = 1
         exerciseTimerDuration = 1
-        // Initialization
+
+        // Actual Initialization
+//        exerciseDuration = duration
+//        exerciseTimerDuration = duration.toInt()
 
         exerciseList = Constants.ExerciseList()
 

@@ -40,9 +40,14 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.getField
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 
 class ProfileActivity : AppCompatActivity() {
@@ -52,6 +57,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var storageReference: StorageReference
     private lateinit var db: DatabaseReference
     private lateinit var fsStore: FirebaseFirestore
+    private  var streakNumber : Int =0
     var BmiValue = ""
     var HeightValue = ""
     var WeightValue = ""
@@ -102,6 +108,7 @@ class ProfileActivity : AppCompatActivity() {
         }
         auth = FirebaseAuth.getInstance()
         fsStore = FirebaseFirestore.getInstance()
+        check()
         sharedPreferences =
             applicationContext.getSharedPreferences("USERDATA", Context.MODE_PRIVATE)
         editor = sharedPreferences.edit()
@@ -481,9 +488,95 @@ class ProfileActivity : AppCompatActivity() {
             }
     }
 
+    fun check() {
+
+        fsStore.collection("Streak")
+            .document(auth.currentUser?.uid!!)
+            .collection("mystreak")
+            .document(auth.currentUser?.uid!! + "Streak")
+            .get().addOnSuccessListener { it ->
+                if (it.exists()) {
+                    val getstreak = it.getField<Int>("Streak")
+                    Log.d("75", "check: $getstreak")
+                    if (getstreak != 0) {
+                        val date =
+                            SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+                        fsStore.collection("Challenge").document(auth.currentUser?.uid!!)
+                            .collection("mychallenge")
+                            .whereEqualTo("Date", date).get().addOnSuccessListener { result ->
+                                if (result.isEmpty) {
+                                    val dateFormat =
+                                        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                                    val currentDate = Date()
+                                    val calendar = Calendar.getInstance()
+                                    calendar.time = currentDate
+                                    calendar.add(Calendar.DAY_OF_YEAR, -1)
+                                    val yesterdayDate = calendar.time
+                                    val yesterdayFormattedDate = dateFormat.format(yesterdayDate)
+                                    fsStore.collection("Challenge")
+                                        .document(auth.currentUser?.uid!!)
+                                        .collection("mychallenge")
+                                        .whereEqualTo("Date", yesterdayFormattedDate).get()
+                                        .addOnSuccessListener { yesterday ->
+                                            if (yesterday.isEmpty) {
+                                                // hello world
+                                                fsStore.collection("Challenge")
+                                                    .document(auth.currentUser?.uid!!).collection("mychallenge").get().addOnSuccessListener {
+                                                        it->
+                                                        for (document in it.documents) {
+                                                            document.reference.delete()
+                                                                .addOnSuccessListener {
+                                                                    Log.d("75", "Document successfully deleted!")
+                                                                }
+                                                                .addOnFailureListener { e ->
+                                                                    Log.w("75", "Error deleting document", e)
+                                                                }
+                                                        }                                                    }
+
+                                                val intStreakEntry = hashMapOf(
+                                                    "Streak" to 0,
+                                                    "Status" to false
+                                                )
+                                                fsStore.collection("Streak")
+                                                    .document(auth.currentUser?.uid!!)
+                                                    .collection("mystreak")
+                                                    .document(auth.currentUser?.uid!! + "Streak")
+                                                    .set(intStreakEntry).addOnCompleteListener {
+                                                        Log.d("75", "streakdata: Done")
+                                                    }
+
+                                                Log.d("75", "Streak Broken")
+                                            }else
+                                            {
+                                                Log.d("75", "Streak hello")
+                                            }
+                                            Log.d("75", "uploadToStore: Done")
+                                        }
+                                } else {
+                                    Log.d("75", "Fitness activity for today already logged")
+                                }
+                            }.addOnFailureListener {
+                                Log.w("75", "Error checking for existing fitness record")
+                            }
+
+                    } else {
+                        bindProfile.streakContainer.visibility = View.INVISIBLE
+                        Log.d("75", "check: Start new challenge")
+                    }
+
+                    if(getstreak!=0){
+                        bindProfile.streakContainer.visibility = View.VISIBLE
+                        bindProfile.streakTxt.text = getstreak.toString()
+                    }
+                }
+
+            }
+    }
+
     override fun onResume() {
         super.onResume()
         profile()
+        check()
     }
 
 

@@ -68,4 +68,6 @@
     <string name="read_10_pages_of_non_fiction">Read 10 pages of non-fiction</string>
     <string name="take_progress_picture">Take progress picture</string>
     <string name="enter_your_today_s_learning">Enter Your Today\'s Learning</string>
+    <string name="dash">-</string>
+    <string name="zero">0</string>
 </resources>
