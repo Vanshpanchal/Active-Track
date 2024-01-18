@@ -47,6 +47,7 @@ import java.util.Locale
 import kotlin.random.Random
 
 class challengeAct : AppCompatActivity() {
+    //challenge
     private lateinit var auth: FirebaseAuth
     private lateinit var editor: SharedPreferences.Editor
     private lateinit var view: View
@@ -58,7 +59,7 @@ class challengeAct : AppCompatActivity() {
     private val STREAK_KEY = "streak"
     private lateinit var list: ArrayList<challengeEntry>
 
-    // Initializing SharedPreferences within the activity
+
     private val sharedPreferences by lazy {
         getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }
