@@ -33,6 +33,7 @@ import com.bumptech.glide.request.target.Target
 import com.example.fitnessapp.databinding.ActivityProfileBinding
 import com.example.fitnessapp.databinding.ConfirmationDialogBinding
 import com.example.fitnessapp.databinding.CustomProgressBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -57,7 +58,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var storageReference: StorageReference
     private lateinit var db: DatabaseReference
     private lateinit var fsStore: FirebaseFirestore
-    private  var streakNumber : Int =0
+    private var streakNumber: Int = 0
     var BmiValue = ""
     var HeightValue = ""
     var WeightValue = ""
@@ -242,13 +243,33 @@ class ProfileActivity : AppCompatActivity() {
                         }
                     }
 
+                    4 -> {
+                        initialChallenge()
+                    }
+
                     5 -> {
-                        editor.clear()
-                        editor.commit()
-                        shared_Preferences.edit().putInt(STREAK_KEY, 0).apply()
-                        auth.signOut()
-                        intent = Intent(this@ProfileActivity, WelcomeActivity::class.java)
-                        startActivity(intent)
+                        MaterialAlertDialogBuilder(this@ProfileActivity)
+                            .setTitle("Log Out")
+                            .setIcon(R.drawable.logout)
+                            .setMessage("Are you sure you want to log out?")
+                            .setPositiveButton("Yes") { dialog, which ->
+                                editor.clear()
+                                editor.commit()
+                                shared_Preferences.edit().putInt(STREAK_KEY, 0).apply()
+                                auth.signOut()
+                                intent = Intent(this@ProfileActivity, WelcomeActivity::class.java)
+                                startActivity(intent)
+                            }
+                            .setNegativeButton("No") { dialog, which ->
+                                dialog.dismiss()
+                            }
+                            .show();
+//                        editor.clear()
+//                        editor.commit()
+//                        shared_Preferences.edit().putInt(STREAK_KEY, 0).apply()
+//                        auth.signOut()
+//                        intent = Intent(this@ProfileActivity, WelcomeActivity::class.java)
+//                        startActivity(intent)
 
                     }
 
@@ -452,35 +473,62 @@ class ProfileActivity : AppCompatActivity() {
             .addOnCompleteListener { it ->
                 if (it.isSuccessful) {
                     val result = it.result
-                    if (result != null && result.exists()) {
+                    val getstreak = result.getField<Int>("Streak")
+                    Log.d("75", "check: $getstreak")
+                    if (result != null && result.exists() && getstreak!=0) {
                         intent = Intent(this@ProfileActivity, challengeAct::class.java)
                         startActivity(intent)
                     } else {
-                        val dialog = Dialog(this@ProfileActivity)
-                        val layout = ConfirmationDialogBinding.inflate(layoutInflater)
-                        dialog.setContentView(layout.root)
-                        dialog.setCanceledOnTouchOutside(false)
-                        dialog.show()
-                        layout.no.setOnClickListener {
-                            dialog.dismiss()
-                            Log.d("Btn", "No Clicked")
-                        }
-                        layout.yes.setOnClickListener {
-                            intent = Intent(this@ProfileActivity, challengeAct::class.java)
-                            startActivity(intent)
-                            dialog.dismiss()
+                        MaterialAlertDialogBuilder(this)
+                            .setTitle("Start 75 Hard Challenge")
+                            .setMessage("Are you ready to take on the 75 Hard Challenge? This challenge involves committing to a set of daily tasks for 75 consecutive days.")
+                            .setPositiveButton("Yes") { dialog, which ->
+                                intent = Intent(this@ProfileActivity, challengeAct::class.java)
+                                startActivity(intent)
+                                dialog.dismiss()
 
+                                val intStreakEntry = hashMapOf(
+                                    "Streak" to 0,
+                                    "Status" to false
+                                )
+                                fsStore.collection("Streak").document(auth.currentUser?.uid!!)
+                                    .collection("mystreak")
+                                    .document(auth.currentUser?.uid!! + "Streak")
+                                    .set(intStreakEntry).addOnCompleteListener {
+                                        Log.d("75", "streakdata: Done")
+                                    }
+                            }
+                            .setNegativeButton("Cancel") { dialog, which ->
+                                dialog.dismiss()
+                                Log.d("Btn", "No Clicked")
 
-                            val intStreakEntry = hashMapOf(
-                                "Streak" to 0,
-                                "Status" to false
-                            )
-                            fsStore.collection("Streak").document(auth.currentUser?.uid!!)
-                                .collection("mystreak").document(auth.currentUser?.uid!! + "Streak")
-                                .set(intStreakEntry).addOnCompleteListener {
-                                    Log.d("75", "streakdata: Done")
-                                }
-                        }
+                            }
+                            .show()
+//                        val dialog = Dialog(this@ProfileActivity)
+//                        val layout = ConfirmationDialogBinding.inflate(layoutInflater)
+//                        dialog.setContentView(layout.root)
+//                        dialog.setCanceledOnTouchOutside(false)
+//                        dialog.show()
+//                        layout.no.setOnClickListener {
+//                            dialog.dismiss()
+//                            Log.d("Btn", "No Clicked")
+//                        }
+//                        layout.yes.setOnClickListener {
+//                            intent = Intent(this@ProfileActivity, challengeAct::class.java)
+//                            startActivity(intent)
+//                            dialog.dismiss()
+//
+//
+//                            val intStreakEntry = hashMapOf(
+//                                "Streak" to 0,
+//                                "Status" to false
+//                            )
+//                            fsStore.collection("Streak").document(auth.currentUser?.uid!!)
+//                                .collection("mystreak").document(auth.currentUser?.uid!! + "Streak")
+//                                .set(intStreakEntry).addOnCompleteListener {
+//                                    Log.d("75", "streakdata: Done")
+//                                }
+//                        }
 
                     }
                 }
@@ -521,17 +569,26 @@ class ProfileActivity : AppCompatActivity() {
                                             if (yesterday.isEmpty) {
                                                 // hello world
                                                 fsStore.collection("Challenge")
-                                                    .document(auth.currentUser?.uid!!).collection("mychallenge").get().addOnSuccessListener {
-                                                        it->
+                                                    .document(auth.currentUser?.uid!!)
+                                                    .collection("mychallenge").get()
+                                                    .addOnSuccessListener { it ->
                                                         for (document in it.documents) {
                                                             document.reference.delete()
                                                                 .addOnSuccessListener {
-                                                                    Log.d("75", "Document successfully deleted!")
+                                                                    Log.d(
+                                                                        "75",
+                                                                        "Document successfully deleted!"
+                                                                    )
                                                                 }
                                                                 .addOnFailureListener { e ->
-                                                                    Log.w("75", "Error deleting document", e)
+                                                                    Log.w(
+                                                                        "75",
+                                                                        "Error deleting document",
+                                                                        e
+                                                                    )
                                                                 }
-                                                        }                                                    }
+                                                        }
+                                                    }
 
                                                 val intStreakEntry = hashMapOf(
                                                     "Streak" to 0,
@@ -546,8 +603,7 @@ class ProfileActivity : AppCompatActivity() {
                                                     }
 
                                                 Log.d("75", "Streak Broken")
-                                            }else
-                                            {
+                                            } else {
                                                 Log.d("75", "Streak hello")
                                             }
                                             Log.d("75", "uploadToStore: Done")
@@ -564,7 +620,7 @@ class ProfileActivity : AppCompatActivity() {
                         Log.d("75", "check: Start new challenge")
                     }
 
-                    if(getstreak!=0){
+                    if (getstreak != 0) {
                         bindProfile.streakContainer.visibility = View.VISIBLE
                         bindProfile.streakTxt.text = getstreak.toString()
                     }
@@ -579,5 +635,9 @@ class ProfileActivity : AppCompatActivity() {
         check()
     }
 
+    fun initialChallenge() {
+        MaterialAlertDialogBuilder(this).setTitle(R.string.app_name).setMessage("hello world")
+            .show()
+    }
 
 }

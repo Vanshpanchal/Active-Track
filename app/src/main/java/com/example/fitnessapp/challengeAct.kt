@@ -416,6 +416,7 @@ class challengeAct : AppCompatActivity() {
                             val t4 = view.findViewById<CheckBox>(R.id.task_4)
                             val t5 = view.findViewById<CheckBox>(R.id.task_5)
                             val learning = view.findViewById<TextView>(R.id.learning)
+                            val date_field = view.findViewById<TextView>(R.id.date)
                             t1.isChecked = list[position].Diet.toBoolean()
                             t1.isClickable = false
                             t2.isChecked = list[position].Workout.toBoolean()
@@ -427,6 +428,7 @@ class challengeAct : AppCompatActivity() {
                             t5.isChecked = list[position].ProgressPic.toBoolean()
                             t5.isClickable = false
                             learning.text = list[position].Learning
+                            date_field.text = list[position].Date.toString()
 //                            learning.hint = list[position].learning.toString()
                             Log.d("75", "itemClickListener: ${list}")
 

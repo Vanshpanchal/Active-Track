@@ -1,20 +1,23 @@
 package com.example.fitnessapp
 
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
+import android.net.ConnectivityManager
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
+import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.fitnessapp.databinding.ActivityStartBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.ktx.Firebase
+
 
 class StartActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -22,24 +25,31 @@ class StartActivity : AppCompatActivity() {
     private lateinit var editor: SharedPreferences.Editor
     private lateinit var bindstart: ActivityStartBinding
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
         super.onCreate(savedInstanceState)
         bindstart = ActivityStartBinding.inflate(layoutInflater)
         setContentView(bindstart.root)
+        installSplashScreen()
+        if(!isInternetAvailable()){
+            bindstart.animationView.visibility= View.GONE
+            showNoInternetDialog()
+            Log.d("main", "onCreate: Internet ")
+        }else {
 
-        auth = Firebase.auth
-        sharedPreferences = getSharedPreferences("USERDATA", MODE_PRIVATE)
-        editor = sharedPreferences.edit()
+            bindstart.animationView.visibility= View.VISIBLE
+            auth = Firebase.auth
+            sharedPreferences = getSharedPreferences("USERDATA", MODE_PRIVATE)
+            editor = sharedPreferences.edit()
 
-        if (sharedPreferences.contains("email") && sharedPreferences.contains("pass")) {
-            val email = sharedPreferences.getString("email", null)
-            val pass = sharedPreferences.getString("pass", null)
-            if (!email.isNullOrEmpty() && !pass.isNullOrEmpty()) {
-                AuthenticateUser(email, pass)
+            if (sharedPreferences.contains("email") && sharedPreferences.contains("pass")) {
+                val email = sharedPreferences.getString("email", null)
+                val pass = sharedPreferences.getString("pass", null)
+                if (!email.isNullOrEmpty() && !pass.isNullOrEmpty()) {
+                    AuthenticateUser(email, pass)
+                }
+            } else {
+                val intent = Intent(this, WelcomeActivity::class.java)
+                startActivity(intent)
             }
-        } else {
-            val intent = Intent(this, WelcomeActivity::class.java)
-            startActivity(intent)
         }
     }
 
@@ -118,5 +128,27 @@ class StartActivity : AppCompatActivity() {
                 bar.setActionTextColor(Color.parseColor("#FDFDFD"))
                 bar.show()
             }
+    }
+
+    private fun isInternetAvailable(): Boolean {
+        val connectivityManager =
+            getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (connectivityManager != null) {
+            val activeNetworkInfo = connectivityManager.activeNetworkInfo
+            return activeNetworkInfo != null && activeNetworkInfo.isConnected
+        }
+        return false
+    }
+    private fun showNoInternetDialog() {
+        MaterialAlertDialogBuilder(this@StartActivity)
+            .setTitle("No Internet Connection")
+            .setMessage("Please check your internet connection and try again.")
+            .setPositiveButton("OK") { dialog, which ->
+                // Handle the user's response or dismiss the dialog
+                // For example, you might close the app or retry the operation
+                finish()
+            }
+            .setCancelable(false)  // To prevent the user from dismissing the dialog by clicking outside of it
+            .show()
     }
 }

@@ -42,6 +42,7 @@
 
     <LinearLayout
         android:id="@+id/streak_container"
+        android:visibility="gone"
         android:background="@drawable/streak_bg"
         android:paddingHorizontal="6sp"
         android:layout_width="0dp"
@@ -170,7 +171,7 @@
                 android:text="@string/height_cm"
                 android:textAlignment="center"
                 android:textColor="@color/dark_blue"
-                android:textSize="19sp"
+                android:textSize="15sp"
                 tools:ignore="RtlCompat" />
 
 
@@ -212,7 +213,7 @@
                 android:text="@string/bmi"
                 android:textAlignment="center"
                 android:textColor="@color/dark_blue"
-                android:textSize="19sp"
+                android:textSize="15sp"
                 tools:ignore="RtlCompat" />
         </androidx.cardview.widget.CardView>
 
@@ -252,7 +253,7 @@
                 android:text="@string/weight_kg"
                 android:textAlignment="center"
                 android:textColor="@color/dark_blue"
-                android:textSize="19sp"
+                android:textSize="15sp"
                 tools:ignore="RtlCompat" />
         </androidx.cardview.widget.CardView>
 
