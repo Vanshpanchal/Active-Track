@@ -5,10 +5,10 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.SharedPreferences.Editor
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -16,22 +16,18 @@ import android.os.Looper
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.widget.ArrayAdapter
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.load.model.ModelLoader.LoadData
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.example.fitnessapp.databinding.ActivityProfileBinding
-import com.example.fitnessapp.databinding.ConfirmationDialogBinding
 import com.example.fitnessapp.databinding.CustomProgressBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -225,6 +221,7 @@ class ProfileActivity : AppCompatActivity() {
                                     bar.setBackgroundTint(Color.parseColor("#0D4C92"))
                                     bar.setAction("OK", View.OnClickListener {
                                         bar.dismiss()
+//                                        openEmailApp()
                                     })
                                     bar.setActionTextColor(Color.parseColor("#59C1BD"))
                                     bar.show()
@@ -236,6 +233,7 @@ class ProfileActivity : AppCompatActivity() {
                                     bar.setBackgroundTint(Color.parseColor("#0D4C92"))
                                     bar.setAction("OK", View.OnClickListener {
                                         bar.dismiss()
+
                                     })
                                     bar.setActionTextColor(Color.parseColor("#59C1BD"))
                                     bar.show()
@@ -248,7 +246,7 @@ class ProfileActivity : AppCompatActivity() {
                     }
 
                     5 -> {
-                        MaterialAlertDialogBuilder(this@ProfileActivity)
+                        MaterialAlertDialogBuilder(this@ProfileActivity,R.style.ThemeOverlay_App_MaterialAlertDialog)
                             .setTitle("Log Out")
                             .setIcon(R.drawable.logout)
                             .setMessage("Are you sure you want to log out?")
@@ -640,4 +638,22 @@ class ProfileActivity : AppCompatActivity() {
             .show()
     }
 
+    private fun openEmailApp() {
+        val emailIntent = Intent(Intent.ACTION_SENDTO)
+        emailIntent.data = Uri.parse("mailto:") // Only email apps should handle this
+
+        if (emailIntent.resolveActivity(packageManager) != null) {
+            startActivity(emailIntent)
+        } else {
+            Log.d("profile", "openEmailApp: ")
+            // If no email app is available, you can handle this case accordingly
+            // For example, show a message to the user
+        }
+    }
+
+    private fun isAppInstalled(packageName: String): Boolean {
+        val pm = packageManager
+        val intent = pm.getLaunchIntentForPackage(packageName)
+        return intent != null
+    }
 }

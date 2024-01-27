@@ -6,10 +6,25 @@
         <item name="fontFamily">@font/exo2_wght</item>
         <item name="colorOnContainer">@color/dark_blue</item>
         <item name="colorPrimary">@color/dark_blue</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.App.MaterialAlertDialog</item>
     </style>
     <style name="CustomActionbar" parent="ThemeOverlay.MaterialComponents.ActionBar">
 
         <item name="colorControlNormal">@color/dark_blue</item>
     </style>
     <style name="Theme.FitnessApp" parent="Base.Theme.FitnessApp" />
+
+    <style name="ThemeOverlay.App.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="colorPrimary">@color/light_blue</item> <!--text color-->
+        <item name="colorSecondary">@color/blue_one</item>
+        <item name="colorSurface">@color/light_grey</item>
+        <item name="colorOnSurface">@color/dark_blue</item> <!-- title color-->
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.App.Button</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.App.Button</item>
+
+    </style>
+
+    <style name="Widget.App.Button" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/black</item>
+    </style>
 </resources>

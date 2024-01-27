@@ -6,6 +6,7 @@ import android.content.SharedPreferences.Editor
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Database
@@ -41,6 +42,34 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
+        bindLogin.frgPassword.setOnClickListener {
+            if (bindLogin.email.text.toString().isNotEmpty()) {
+                Firebase.auth.sendPasswordResetEmail(bindLogin.email.text.toString())
+                    .addOnSuccessListener {
+                        Log.d("hello", "Email sent.")
+                        val bar = Snackbar.make(
+                            bindLogin.root, "Reset mail sent", Snackbar.LENGTH_SHORT
+                        )
+                        bar.setBackgroundTint(Color.parseColor("#0D4C92"))
+                        bar.setAction("OK", View.OnClickListener {
+                            bar.dismiss()
+                        })
+                        bar.setActionTextColor(Color.parseColor("#59C1BD"))
+                        bar.show()
+                    }.addOnFailureListener {
+                        Log.d("hello", "Failed")
+                        val bar = Snackbar.make(
+                            bindLogin.root, "${it.message}", Snackbar.LENGTH_SHORT
+                        )
+                        bar.setBackgroundTint(Color.parseColor("#0D4C92"))
+                        bar.setAction("OK", View.OnClickListener {
+                            bar.dismiss()
+                        })
+                        bar.setActionTextColor(Color.parseColor("#59C1BD"))
+                        bar.show()
+                    }
+            }
+        }
         db = FirebaseDatabase.getInstance().getReference("Users")
         bindLogin.LoginBtn.setOnClickListener {
             val emailAddress: String = bindLogin.email.text.toString()
@@ -189,4 +218,6 @@ class LoginActivity : AppCompatActivity() {
                 Log.d("hello", "onCreate: ${it.message} ")
             }
     }
+    
+    
 }
