@@ -11,10 +11,10 @@
     <ImageView
         android:id="@+id/iv_logo"
         android:layout_width="match_parent"
-        android:layout_height="280dp"
+        android:layout_height="250dp"
         android:contentDescription="@string/logo"
         android:scaleType="centerCrop"
-        android:src="@drawable/logo"
+        android:src="@drawable/home_workout_written"
         app:layout_constraintBottom_toTopOf="@+id/fl_start"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -61,14 +61,24 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/radio_style_1"
+            android:button="@null"
             android:checked="true"
+            android:layout_marginHorizontal="5dp"
             android:tag="30"
             android:text="@string/_30_sec"
+            android:textAlignment="center"
+            android:textColor="@color/black"
             android:textSize="20sp" />
 
         <RadioButton
+            android:layout_marginHorizontal="5dp"
             android:id="@+id/second"
             android:layout_width="0dp"
+            android:background="@drawable/radio_style_1"
+            android:button="@null"
+            android:textAlignment="center"
+            android:textColor="@color/black"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:checked="false"
@@ -77,10 +87,15 @@
             android:textSize="20sp" />
 
         <RadioButton
+            android:layout_marginHorizontal="5dp"
             android:id="@+id/third"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/radio_style_1"
+            android:button="@null"
+            android:textAlignment="center"
+            android:textColor="@color/black"
             android:checked="false"
             android:tag="50"
             android:text="@string/_50_sec"
