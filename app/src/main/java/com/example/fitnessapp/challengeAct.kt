@@ -33,6 +33,7 @@ import com.bumptech.glide.request.target.Target
 import com.example.fitnessapp.databinding.ActivityChallengeBinding
 import com.example.fitnessapp.databinding.CustomProgressBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -182,6 +183,17 @@ class challengeAct : AppCompatActivity() {
                         }
                         bottomDialog.show()
                     } else {
+                        MaterialAlertDialogBuilder(
+                            this@challengeAct,
+                            R.style.ThemeOverlay_App_MaterialAlertDialog
+                        )
+                            .setTitle("75 Hard Challenge")
+                            .setIcon(R.drawable.challengeicon)
+                            .setMessage("Fitness activity for today already logged")
+                            .setPositiveButton("Yes") { dialog, which ->
+                                dialog.dismiss()
+                            }
+                            .show();
                         Log.d("75", "Fitness activity for today already logged")
                     }
                 }.addOnFailureListener {
@@ -368,6 +380,7 @@ class challengeAct : AppCompatActivity() {
                             getData()
                         }
                 } else {
+
                     Log.d("75", "Fitness activity for today already logged")
                 }
 

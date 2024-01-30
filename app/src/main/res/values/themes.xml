@@ -7,6 +7,8 @@
         <item name="colorOnContainer">@color/dark_blue</item>
         <item name="colorPrimary">@color/dark_blue</item>
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.App.MaterialAlertDialog</item>
+        <item name="colorOnSurface">@color/dark_blue</item>
+        <item name="colorContainer">@color/dark_blue</item>
     </style>
     <style name="CustomActionbar" parent="ThemeOverlay.MaterialComponents.ActionBar">
 
@@ -21,7 +23,15 @@
         <item name="colorOnSurface">@color/dark_blue</item> <!-- title color-->
         <item name="buttonBarNegativeButtonStyle">@style/Widget.App.Button</item>
         <item name="buttonBarPositiveButtonStyle">@style/Widget.App.Button</item>
+    </style>
 
+    <style name="Spinner" parent="Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu">
+        <item name="colorContainer">@color/dark_blue</item>
+        <item name="cornerRadius">20dp</item>
+        <item name="boxBackgroundColor">@color/light_grey</item>
+        <item name="boxStrokeColor">@color/dark_blue</item>
+        <item name="strokeWidth">2sp</item>
+        <item name="endIconTint">@color/dark_blue</item>
     </style>
 
     <style name="Widget.App.Button" parent="Widget.Material3.Button.TextButton.Dialog">

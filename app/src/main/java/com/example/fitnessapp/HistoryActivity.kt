@@ -6,11 +6,14 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.CheckBox
+import android.widget.ImageButton
 import android.widget.RadioButton
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fitnessapp.databinding.ActivityHistoryBinding
+import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -22,6 +25,7 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.TextStyle
 import java.util.Locale
+import kotlin.math.log
 
 class HistoryActivity : AppCompatActivity() {
     private var activeRadio = "EXERCISE"
@@ -30,14 +34,17 @@ class HistoryActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var bmiList: ArrayList<bmiEntry>
     private lateinit var previewDialog: BottomSheetDialog
+    private lateinit var filterDialog: BottomSheetDialog
     private lateinit var ActivityList: ArrayList<ActivtyEntry>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bindHistory = ActivityHistoryBinding.inflate(layoutInflater)
         setContentView(bindHistory?.root)
-
+        bindHistory?.status?.visibility = View.INVISIBLE
+        bindHistory?.filter?.visibility = View.INVISIBLE
         setSupportActionBar(bindHistory?.actionbar)
         previewDialog = BottomSheetDialog(this)
+        filterDialog = BottomSheetDialog(this)
         if (supportActionBar != null) {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
             supportActionBar?.title = (getString(R.string.history))
@@ -61,14 +68,14 @@ class HistoryActivity : AppCompatActivity() {
         getBmiData()
 
         val dao = (application as App).db.historyDao()
-        bindHistory?.clearAll?.setOnClickListener {
-//            clearAllData(dao)
-            if (activeRadio == "EXERCISE") {
-                runOnUiThread {
-                    clearAllData(dao)
-                }
-            }
-        }
+//        bindHistory?.clearAll?.setOnClickListener {
+////            clearAllData(dao)
+//            if (activeRadio == "EXERCISE") {
+//                runOnUiThread {
+//                    clearAllData(dao)
+//                }
+//            }
+//        }
 
         bindHistory?.radioGrp?.setOnCheckedChangeListener { _, id ->
 
@@ -77,21 +84,122 @@ class HistoryActivity : AppCompatActivity() {
                 "EXERCISE" -> {
                     bindHistory?.rvRecords?.visibility = View.VISIBLE
                     bindHistory?.rvBmi?.visibility = View.GONE
-                    bindHistory?.clearAll?.visibility = View.VISIBLE
+                    bindHistory?.status?.visibility = View.INVISIBLE
+                    bindHistory?.filter?.visibility = View.INVISIBLE
                     activeRadio = "EXERCISE"
-//                    getActvityData()
+                    if(ActivityList.size<=0){
+                        bindHistory?.status1?.visibility = View.VISIBLE
+                    }
                 }
 
                 "BMI" -> {
                     bindHistory?.rvRecords?.visibility = View.GONE
                     bindHistory?.rvBmi?.visibility = View.VISIBLE
-                    bindHistory?.clearAll?.visibility = View.GONE
+                    bindHistory?.filter?.visibility = View.VISIBLE
+                    bindHistory?.status1?.visibility = View.INVISIBLE
+
                     activeRadio = "BMI"
+//                    bmiList.clear()
 //                    getBmiData()
+                    if (bmiList.size<=0){
+                        bindHistory?.status?.visibility = View.VISIBLE
+                    }
+                    bindHistory?.rvBmi?.adapter = BmiAdapter(bmiList)
+                    val bmiAdapter = BmiAdapter(bmiList)
+                    bindHistory!!.rvBmi.adapter = bmiAdapter
+
+                    bmiAdapter.onItem(object : BmiAdapter.onitemclickB {
+                        override fun itemClickListener(position: Int) {
+                        }
+
+                    })
                 }
 
                 else -> {
                     Log.d("hello", "ERROR")
+                }
+            }
+
+            bindHistory?.filter?.setOnClickListener {
+                bindHistory?.status?.visibility = View.GONE
+                val view = View.inflate(this@HistoryActivity, R.layout.filter_box, null)
+                filterDialog.setContentView(view)
+                filterDialog.show()
+                val btn = view.findViewById<ImageButton>(R.id.clear_filter)
+                val apply_btn = view.findViewById<Button>(R.id.btn_apply)
+                val healthy = view.findViewById<CheckBox>(R.id.checkBox)
+                val underWeight = view.findViewById<CheckBox>(R.id.checkBox2)
+                val overWeight = view.findViewById<CheckBox>(R.id.checkBox3)
+                val obseity = view.findViewById<CheckBox>(R.id.checkBox4)
+                btn.setOnClickListener{
+                    bindHistory?.rvBmi?.adapter = BmiAdapter(bmiList)
+                    val bmiAdapter = BmiAdapter(bmiList)
+                    bindHistory!!.rvBmi.adapter = bmiAdapter
+
+                    bmiAdapter.onItem(object : BmiAdapter.onitemclickB {
+                        override fun itemClickListener(position: Int) {
+                        }
+
+                    })
+                }
+                apply_btn.setOnClickListener {
+
+                    val b: ArrayList<bmiEntry> = ArrayList()
+                    Log.d("75", "onCreate: ${obseity.isChecked}")
+                    filterDialog.dismiss()
+                    if(obseity.isChecked || healthy.isChecked || overWeight.isChecked || underWeight.isChecked) {
+
+
+                        if (obseity.isChecked) {
+                            obseity.isChecked = true
+                            val list = bmiList.filter { it.bmi?.toFloat()!! > 30 }
+                            b.addAll(list)
+
+                        }
+                        if (healthy.isChecked) {
+                            healthy.isChecked = true
+                            val list =
+                                bmiList.filter { it.bmi?.toFloat()!! > 18.5 && it.bmi?.toFloat()!! <= 25.0 }
+                            b.addAll(list)
+                        }
+
+                        if (underWeight.isChecked) {
+                            underWeight.isChecked = true
+                            val list = bmiList.filter { it.bmi?.toFloat()!! < 18.5 }
+                            b.addAll(list)
+                        }
+
+                        if (overWeight.isChecked) {
+                            overWeight.isChecked = true
+                            val list =
+                                bmiList.filter { it.bmi?.toFloat()!! > 25 && it.bmi?.toFloat()!! <= 30 }
+                            b.addAll(list)
+                        }
+                        Log.d("75", "onCreate: ${b.size}")
+
+                        if (b.size <= 0) {
+                            bindHistory?.status?.visibility = View.VISIBLE
+                        }
+                        bindHistory?.rvBmi?.adapter = BmiAdapter(b)
+                        val bmiAdapter = BmiAdapter(b)
+                        bindHistory!!.rvBmi.adapter = bmiAdapter
+
+                        bmiAdapter.onItem(object : BmiAdapter.onitemclickB {
+                            override fun itemClickListener(position: Int) {
+                            }
+
+                        })
+                    }else{
+                        bindHistory?.rvBmi?.adapter = BmiAdapter(bmiList)
+                        val bmiAdapter = BmiAdapter(bmiList)
+                        bindHistory!!.rvBmi.adapter = bmiAdapter
+
+                        bmiAdapter.onItem(object : BmiAdapter.onitemclickB {
+                            override fun itemClickListener(position: Int) {
+                            }
+
+                        })
+                    }
                 }
             }
         }
@@ -189,7 +297,7 @@ class HistoryActivity : AppCompatActivity() {
             .get()
             .addOnSuccessListener { it ->
                 if (!it.isEmpty) {
-                    bindHistory?.status?.visibility = View.GONE
+                    bindHistory?.status1?.visibility = View.GONE
                     bindHistory?.rvRecords?.visibility = View.VISIBLE
                     for (data in it) {
                         val obj = data.toObject(ActivtyEntry::class.java)
@@ -232,7 +340,7 @@ class HistoryActivity : AppCompatActivity() {
                             close_btn.setOnClickListener {
                                 previewDialog.dismiss()
                             }
-                            duration_field.text = exercise_duration+" seconds"
+                            duration_field.text = exercise_duration + " seconds"
                             date_field.text = exercise_date
                             start_field.text = start_duration
                             end_field.text = end_duration
@@ -247,7 +355,7 @@ class HistoryActivity : AppCompatActivity() {
 
                     })
                 } else {
-                    bindHistory?.status?.visibility = View.VISIBLE
+                    bindHistory?.status1?.visibility = View.VISIBLE
                     bindHistory?.rvRecords?.visibility = View.GONE
                 }
             }

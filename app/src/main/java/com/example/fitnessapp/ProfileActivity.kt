@@ -166,7 +166,7 @@ class ProfileActivity : AppCompatActivity() {
 
         val MenuName: Array<String> =
             arrayOf(
-                "HISTORY",
+                "RECORDS",
                 "75 HARD CHALLENGE",
                 "EDIT PROFILE PIC",
                 "RESET PASSWORD",

@@ -62,6 +62,26 @@ class BmiAdapter(private val items: ArrayList<bmiEntry>) :
 
         holder.serialNo.text = (position + 1).toString()
 
+        val bmi_value = items[position].bmi?.toFloat()
+        if (bmi_value != null) {
+            if (bmi_value < 18.5) {
+                holder.bmiBox.setBackgroundColor(
+                    Color.parseColor("#00aef0")
+                )
+            } else if (bmi_value > 30.0) {
+                holder.bmiBox.setBackgroundColor(
+                    Color.parseColor("#b41818")
+                )
+            } else if (bmi_value in 25.0..30.0) {
+                holder.bmiBox.setBackgroundColor(
+                    Color.parseColor("#ff9f00")
+                )
+            } else {
+                holder.bmiBox.setBackgroundColor(
+                    Color.parseColor("#388E3C")
+                )
+            }
+        }
         if (position % 2 == 0) {
             holder.main.setBackgroundColor(
                 Color.parseColor("#DCDCDF")

@@ -8,5 +8,10 @@
     <color name="light_grey">#DCDCDF</color>
     <color name="odd_list">#939393</color>
     <color name="blue_one">#FF001026</color>
+    <color name="healthy">#388E3C</color>
+    <color name="underweight">#00aef0</color>
+    <color name="overweight">#ff9f00</color>
+    <color name="obesity">#b41818</color>
+
 
 </resources>

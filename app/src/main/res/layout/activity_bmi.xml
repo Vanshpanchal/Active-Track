@@ -254,13 +254,15 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_bmi"
             tools:visibility="visible">
 
+
             <TextView
+                android:paddingVertical="8dp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="5sp"
                 android:layout_weight="1"
-                android:background="#b61c1c"
-                android:text="@string/_16_severe_thiness"
+                android:background="@color/underweight"
+                android:text="@string/_18_5_n_under_weight"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="20sp"
@@ -269,22 +271,13 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:paddingVertical="8dp"
                 android:layout_marginHorizontal="5sp"
                 android:layout_weight="1"
-                android:background="#d74315"
-                android:text="@string/_16_17_n_moderate_thiness"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="5sp"
-                android:layout_weight="1"
-                android:background="#ff6f00"
-                android:text="@string/_16_severe_thiness"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:background="#388E3C"
+                android:text="@string/normal"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="20sp"
@@ -308,37 +301,29 @@
             tools:visibility="visible">
 
             <TextView
+                android:paddingVertical="8dp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="5sp"
                 android:layout_weight="1"
-                android:background="#00828f"
-                android:text="@string/normal"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="5sp"
-                android:layout_weight="1"
-                android:background="#00685b"
+                android:background="#ff9f00"
                 android:text="@string/overweight"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
+
+
             <TextView
                 android:layout_width="0dp"
+                android:paddingVertical="8dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="5sp"
                 android:layout_weight="1"
-                android:background="#b41818"
-
-                android:text="@string/_30_obese"
+                android:gravity="center"
+                android:background="@color/obesity"
+                android:text="@string/_35_n_extremely_obese"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="20sp"

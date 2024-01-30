@@ -69,20 +69,37 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:orientation="vertical"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radio_grp" />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_bmi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="8sp"
         android:orientation="vertical"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radio_grp" />
+
+    <TextView
+        android:id="@+id/status1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/no_exercise_record_available"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/actionbar" />
 
     <TextView
         android:id="@+id/status"
@@ -99,14 +116,14 @@
         app:layout_constraintTop_toBottomOf="@+id/actionbar" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/clearAll"
+        android:id="@+id/filter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="15dp"
         android:backgroundTint="@color/dark_blue"
         android:contentDescription="@string/clear"
-        android:text="@string/clear_all"
+        android:text="@string/filter"
         android:textColor="@color/white"
         android:textStyle="bold"
         app:icon="@drawable/baseline_clear_all_24"
