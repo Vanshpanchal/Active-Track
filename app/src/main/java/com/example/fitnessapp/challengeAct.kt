@@ -1,12 +1,16 @@
 package com.example.fitnessapp
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.app.AlarmManager
 import android.app.Dialog
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -19,11 +23,12 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import androidx.core.content.getSystemService
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -34,32 +39,38 @@ import com.example.fitnessapp.databinding.ActivityChallengeBinding
 import com.example.fitnessapp.databinding.CustomProgressBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.getField
-import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-import kotlin.random.Random
 
 class challengeAct : AppCompatActivity() {
     //challenge
     private lateinit var auth: FirebaseAuth
     private lateinit var editor: SharedPreferences.Editor
     private lateinit var view: View
+    private lateinit var calender: Calendar
+    private lateinit var pendingIntent: PendingIntent
+    private lateinit var alarmManager: AlarmManager
     lateinit var binding: ActivityChallengeBinding
     lateinit var bottomDialog: BottomSheetDialog
     private lateinit var storageReference: StorageReference
     private lateinit var fsStore: FirebaseFirestore
     private val PREFS_NAME = "StreakPrefs"
     private val STREAK_KEY = "streak"
+    private val channelId = "ID"
+    private val channelName = "Name"
     private lateinit var list: ArrayList<challengeEntry>
-
+    private lateinit var sharedPre: SharedPreferences
+    private lateinit var Prefeditor: SharedPreferences.Editor
 
     private val sharedPreferences by lazy {
         getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -152,6 +163,8 @@ class challengeAct : AppCompatActivity() {
         }
         bottomDialog = BottomSheetDialog(this)
         auth = FirebaseAuth.getInstance()
+        sharedPre = getSharedPreferences("Notification", MODE_PRIVATE)
+        Prefeditor = sharedPreferences.edit()
         val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
         fsStore = FirebaseFirestore.getInstance()
         list = arrayListOf()
@@ -202,7 +215,104 @@ class challengeAct : AppCompatActivity() {
 
 
         }
+
+        binding.timer.setOnLongClickListener (object  : View.OnLongClickListener{
+            override fun onLongClick(v: View?): Boolean {
+                Log.d("75", "onLongClick: ")
+                MaterialAlertDialogBuilder(
+                    this@challengeAct,
+                    R.style.ThemeOverlay_App_MaterialAlertDialog
+                )
+                    .setTitle("75 Hard Challenge")
+                    .setIcon(R.drawable.challengeicon)
+                    .setMessage("Are you sure you want to delete Reminder?")
+                    .setPositiveButton("Yes") { dialog, which ->
+                        dialog.dismiss()
+                        cancelAlaram()
+                    }
+                    .show();
+                return true
+            }
+
+        })
+        createNotificationChannel()
+        binding.timer.isLongClickable = true
+        binding.timer.setOnClickListener {
+            val picker =
+                MaterialTimePicker.Builder()
+                    .setTimeFormat(TimeFormat.CLOCK_12H)
+                    .setHour(12)
+                    .setMinute(10)
+                    .setTitleText("Select Reminder time")
+                    .setPositiveButtonText("OK")
+                    .setNegativeButtonText("Cancel")
+                    .build()
+
+            picker.addOnPositiveButtonClickListener {
+                Log.d("75", "onCreate: ${picker.minute}")
+                calender = Calendar.getInstance()
+                calender[Calendar.HOUR_OF_DAY] = picker.hour
+                calender[Calendar.MINUTE] = picker.minute
+                calender[Calendar.SECOND] = 0
+                calender[Calendar.MILLISECOND] = 0
+                setAlaram()
+                Prefeditor.putBoolean("Reminder",true)
+                sharedPre.getBoolean("Reminder",true).toString()
+                Log.d("75", "pref ${sharedPre.getBoolean("Reminder",true).toString()}")
+                Prefeditor.commit()
+
+            }
+            picker.show(supportFragmentManager, "tag")
+
+        }
     }
+
+    private fun cancelAlaram() {
+        alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+        val intent = Intent(this, Notification::class.java)
+        pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        alarmManager.cancel(pendingIntent)
+        Prefeditor.putBoolean("Reminder",false)
+        Prefeditor.commit()
+        fsStore.collection("Streak")
+            .document(auth.currentUser?.uid!!)
+            .collection("mystreak")
+            .document(auth.currentUser?.uid!! + "Streak").update("Reminder", false).addOnSuccessListener {
+                Log.d("75", "CancelAlaram: Done")
+            }
+    }
+
+
+    private fun setAlaram() {
+
+        alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+        val intent = Intent(this, Notification::class.java)
+        pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+
+        alarmManager.setRepeating(
+            AlarmManager.RTC_WAKEUP, calender.timeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent
+        )
+        fsStore.collection("Streak")
+            .document(auth.currentUser?.uid!!)
+            .collection("mystreak")
+            .document(auth.currentUser?.uid!! + "Streak").update("Reminder", true).addOnSuccessListener {
+                Log.d("75", "setAlaram: Done")
+            }
+        Toast.makeText(this, "Alarm Set", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel =
+                NotificationChannel("APP", channelName, NotificationManager.IMPORTANCE_HIGH)
+            channel.description = "Namaste"
+            val notificationManager =
+                getSystemService(NotificationManager::class.java)
+
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
 
     private fun checkpermissionRead() = ActivityCompat.checkSelfPermission(
         this, Manifest.permission.READ_EXTERNAL_STORAGE
@@ -361,6 +471,7 @@ class challengeAct : AppCompatActivity() {
                                 .get().addOnSuccessListener { it ->
                                     if (it.exists()) {
                                         val getstreak = it.getField<Int>("Streak")
+                                        Log.d("75", "uploadData__: $getstreak")
                                         if (getstreak != null) {
                                             if (getstreak == 74) {
                                                 streakdata(getstreak + 1, true)
@@ -415,10 +526,11 @@ class challengeAct : AppCompatActivity() {
                                 View.inflate(this@challengeAct, R.layout.challenge_preview, null)
                             bottomDialog.setContentView(view)
                             bottomDialog.show()
+                            val p = position+1
                             val img = view.findViewById<ImageView>(R.id.prog_pic)
                             storageReference =
                                 FirebaseStorage.getInstance().reference.child("Challenge/" + auth.currentUser?.uid)
-                                    .child("Day$position")
+                                    .child("Day$p")
                             storageReference.downloadUrl.addOnSuccessListener { uri ->
                                 Glide.with(view).load(uri).into(img)
                             }.addOnFailureListener { exception -> }
@@ -456,7 +568,8 @@ class challengeAct : AppCompatActivity() {
     fun streakdata(streak: Int = 0, sts: Boolean = false) {
         val streakEntry = hashMapOf(
             "Streak" to streak,
-            "Status" to sts
+            "Status" to sts,
+            "Reminder" to false //debug
         )
         fsStore.collection("Streak").document(auth.currentUser?.uid!!)
             .collection("mystreak").document(auth.currentUser?.uid!! + "Streak").get()
@@ -472,7 +585,8 @@ class challengeAct : AppCompatActivity() {
                     } else {
                         val intStreakEntry = hashMapOf(
                             "Streak" to 0,
-                            "Status" to false
+                            "Status" to false,
+                            "Reminder" to false //debug
                         )
                         fsStore.collection("Streak").document(auth.currentUser?.uid!!)
                             .collection("mystreak").document(auth.currentUser?.uid!! + "Streak")

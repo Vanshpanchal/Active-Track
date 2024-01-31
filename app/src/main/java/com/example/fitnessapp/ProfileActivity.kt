@@ -2,10 +2,14 @@ package com.example.fitnessapp
 
 import android.Manifest
 import android.app.Dialog
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -21,6 +25,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -41,6 +46,10 @@ import com.google.firebase.firestore.getField
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -54,7 +63,10 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var storageReference: StorageReference
     private lateinit var db: DatabaseReference
     private lateinit var fsStore: FirebaseFirestore
-    private var streakNumber: Int = 0
+    private lateinit var sharedPre: SharedPreferences
+    private lateinit var Prefeditor: SharedPreferences.Editor
+    private var reminder: Boolean = false
+
     var BmiValue = ""
     var HeightValue = ""
     var WeightValue = ""
@@ -115,6 +127,25 @@ class ProfileActivity : AppCompatActivity() {
         bindProfile.email.text = emailAddress
         bindProfile.username.text = username
         editor.commit()
+
+        sharedPre = applicationContext.getSharedPreferences("Notification", MODE_PRIVATE)
+        Prefeditor = sharedPreferences.edit()
+        Prefeditor.commit()
+        val sts = sharedPre.getBoolean("Reminder", false)
+        Log.d("75", "onCreate: $reminder")
+
+        reminderCheck()
+
+        bindProfile.linearLayout4.setOnLongClickListener {
+            val clipboardManager =
+                getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+            val username = bindProfile.username.text
+            val email  = bindProfile.email.text
+            val data ="${username}\n"+email
+            val clipData = ClipData.newPlainText("text", data)
+            clipboardManager.setPrimaryClip(clipData)
+            true
+        }
 
         val user = auth.currentUser
         fs = FirebaseFirestore.getInstance()
@@ -246,7 +277,10 @@ class ProfileActivity : AppCompatActivity() {
                     }
 
                     5 -> {
-                        MaterialAlertDialogBuilder(this@ProfileActivity,R.style.ThemeOverlay_App_MaterialAlertDialog)
+                        MaterialAlertDialogBuilder(
+                            this@ProfileActivity,
+                            R.style.ThemeOverlay_App_MaterialAlertDialog
+                        )
                             .setTitle("Log Out")
                             .setIcon(R.drawable.logout)
                             .setMessage("Are you sure you want to log out?")
@@ -463,7 +497,7 @@ class ProfileActivity : AppCompatActivity() {
     fun streakdata(streak: Int = 0, sts: Boolean = false) {
         val streakEntry = hashMapOf(
             "Streak" to streak,
-            "Status" to sts
+            "Status" to sts,
         )
         fsStore.collection("Streak").document(auth.currentUser?.uid!!)
             .collection("mystreak").document(auth.currentUser?.uid!! + "Streak")
@@ -472,8 +506,12 @@ class ProfileActivity : AppCompatActivity() {
                 if (it.isSuccessful) {
                     val result = it.result
                     val getstreak = result.getField<Int>("Streak")
-                    Log.d("75", "check: $getstreak")
-                    if (result != null && result.exists() && getstreak!=0) {
+                    val remindersts = result.getField<Boolean>("Reminder")
+                    if (remindersts != null) {
+                        reminder = remindersts
+                    }
+                    Log.d("75", "check__: $remindersts")
+                    if (result != null && result.exists() && getstreak != 0) {
                         intent = Intent(this@ProfileActivity, challengeAct::class.java)
                         startActivity(intent)
                     } else {
@@ -487,7 +525,8 @@ class ProfileActivity : AppCompatActivity() {
 
                                 val intStreakEntry = hashMapOf(
                                     "Streak" to 0,
-                                    "Status" to false
+                                    "Status" to false,
+                                    "Reminder" to false //debug
                                 )
                                 fsStore.collection("Streak").document(auth.currentUser?.uid!!)
                                     .collection("mystreak")
@@ -590,7 +629,8 @@ class ProfileActivity : AppCompatActivity() {
 
                                                 val intStreakEntry = hashMapOf(
                                                     "Streak" to 0,
-                                                    "Status" to false
+                                                    "Status" to false,
+                                                    "Reminder" to false
                                                 )
                                                 fsStore.collection("Streak")
                                                     .document(auth.currentUser?.uid!!)
@@ -631,6 +671,7 @@ class ProfileActivity : AppCompatActivity() {
         super.onResume()
         profile()
         check()
+        reminderCheck()
     }
 
     fun initialChallenge() {
@@ -656,4 +697,28 @@ class ProfileActivity : AppCompatActivity() {
         val intent = pm.getLaunchIntentForPackage(packageName)
         return intent != null
     }
+
+    private fun reminderCheck() {
+        fsStore.collection("Streak").document(auth.currentUser?.uid!!)
+            .collection("mystreak").document(auth.currentUser?.uid!! + "Streak")
+            .get().addOnCompleteListener { it ->
+                if (it.isSuccessful) {
+                    val result = it.result
+                    val reminderVal = result.getField<Boolean>("Reminder")
+                    if (reminderVal != null) {
+                        reminder = reminderVal
+                    }
+                    if (reminderVal == true) {
+                        bindProfile.remainderContainer.visibility = View.VISIBLE
+                    } else {
+                        bindProfile.remainderContainer.visibility = View.GONE
+                    }
+                    Log.d("75", "onCreate Act: $reminderVal")
+                }
+            }.addOnFailureListener {
+                Log.d("75", "onCreate: Failed")
+            }
+    }
+
+
 }

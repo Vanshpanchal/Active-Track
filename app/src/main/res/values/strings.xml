@@ -84,4 +84,5 @@
     <string name="obesity">Obesity</string>
     <string name="apply">Apply</string>
     <string name="ovr_weight">Over-Weight</string>
+    <string name="timer">Timer</string>
 </resources>

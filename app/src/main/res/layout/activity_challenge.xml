@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".challengeAct">
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/actionbar"
         android:layout_width="match_parent"
@@ -17,27 +18,45 @@
         app:titleTextColor="@color/dark_blue"
         tools:title="APP NAME" />
 
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_challenge"
         android:layout_width="match_parent"
-        android:layout_marginTop="15sp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15sp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/actionbar" />
+
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/upload"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="25dp"
-        app:icon="@drawable/baseline_workspaces_24"
+        android:layout_marginBottom="25dp"
+        android:backgroundTint="@color/dark_blue"
+        android:clickable="true"
+        android:contentDescription="@string/add_data"
         android:text="@string/upload"
         android:textAllCaps="true"
-        android:contentDescription="@string/add_data"
-        android:layout_marginBottom="25dp"
-        android:clickable="true"
+        android:textColor="@color/white"
+        app:icon="@drawable/baseline_workspaces_24"
+        app:iconTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/timer"
+        android:layout_marginBottom="12dp"
+        android:backgroundTint="@color/dark_blue"
+        android:clickable="true"
+        app:iconTint="@color/white"
+        app:icon="@drawable/baseline_access_time_24"
+        app:layout_constraintBottom_toTopOf="@+id/upload"
+        app:layout_constraintEnd_toEndOf="@+id/upload"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
