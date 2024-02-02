@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.ContentResolver
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
@@ -140,11 +141,52 @@ class ProfileActivity : AppCompatActivity() {
             val clipboardManager =
                 getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
             val username = bindProfile.username.text
-            val email  = bindProfile.email.text
-            val data ="${username}\n"+email
+            val email = bindProfile.email.text
+            val data = "${username}\n" + email
             val clipData = ClipData.newPlainText("text", data)
             clipboardManager.setPrimaryClip(clipData)
             true
+        }
+
+        bindProfile.profilePic.setOnLongClickListener {
+            val resources = resources
+            val drawableId =
+               R.drawable.profile// Replace with your actual drawable resource ID
+
+            val uri = Uri.parse(
+                "${ContentResolver.SCHEME_ANDROID_RESOURCE}://" +
+                        "${resources.getResourcePackageName(drawableId)}/" +
+                        "${resources.getResourceTypeName(drawableId)}/" +
+                        resources.getResourceEntryName(drawableId)
+            )
+
+            MaterialAlertDialogBuilder(
+                this@ProfileActivity,
+                R.style.ThemeOverlay_App_MaterialAlertDialog
+            )
+                .setTitle("Remove Profile Pic")
+                .setIcon(R.drawable.appicon)
+                .setMessage("Are you sure you want to remove Profile pic?")
+                .setPositiveButton("Yes") { dialog, which ->
+                    storageReference =
+                        FirebaseStorage.getInstance().getReference("Users/" + auth.currentUser?.uid)
+                    storageReference.putFile(uri).addOnSuccessListener {
+                        Log.d("hello", "onCreate: Default Uploaded")
+                        galleryprofile()
+                        dialog.dismiss()
+//                    loading.dismiss()
+                    }.addOnFailureListener {
+                        Log.d("hello", "onCreate: Failed")
+
+                    }
+                }
+                .setNegativeButton("No") { dialog, which ->
+                    dialog.dismiss()
+                }
+                .show();
+
+            true
+
         }
 
         val user = auth.currentUser
@@ -515,7 +557,7 @@ class ProfileActivity : AppCompatActivity() {
                         intent = Intent(this@ProfileActivity, challengeAct::class.java)
                         startActivity(intent)
                     } else {
-                        MaterialAlertDialogBuilder(this)
+                        MaterialAlertDialogBuilder(this,R.style.ThemeOverlay_App_MaterialAlertDialog)
                             .setTitle("Start 75 Hard Challenge")
                             .setMessage("Are you ready to take on the 75 Hard Challenge? This challenge involves committing to a set of daily tasks for 75 consecutive days.")
                             .setPositiveButton("Yes") { dialog, which ->
@@ -674,8 +716,9 @@ class ProfileActivity : AppCompatActivity() {
         reminderCheck()
     }
 
+
     fun initialChallenge() {
-        MaterialAlertDialogBuilder(this).setTitle(R.string.app_name).setMessage("hello world")
+        MaterialAlertDialogBuilder(this,R.style.ThemeOverlay_App_MaterialAlertDialog).setTitle(R.string.app_name).setMessage("hello world")
             .show()
     }
 

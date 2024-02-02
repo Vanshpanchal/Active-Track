@@ -17,8 +17,8 @@
     <style name="Theme.FitnessApp" parent="Base.Theme.FitnessApp" />
 
     <style name="ThemeOverlay.App.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
-        <item name="colorPrimary">@color/light_blue</item> <!--text color-->
-        <item name="colorSecondary">@color/blue_one</item>
+        <item name="colorPrimary">@color/white</item> <!--text color-->
+        <item name="colorSecondary">@color/white</item>
         <item name="colorSurface">@color/light_grey</item>
         <item name="colorOnSurface">@color/dark_blue</item> <!-- title color-->
         <item name="buttonBarNegativeButtonStyle">@style/Widget.App.Button</item>

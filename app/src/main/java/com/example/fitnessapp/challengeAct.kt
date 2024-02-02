@@ -526,11 +526,11 @@ class challengeAct : AppCompatActivity() {
                                 View.inflate(this@challengeAct, R.layout.challenge_preview, null)
                             bottomDialog.setContentView(view)
                             bottomDialog.show()
-                            val p = position+1
+                            val p = position+1 // hello world
                             val img = view.findViewById<ImageView>(R.id.prog_pic)
                             storageReference =
                                 FirebaseStorage.getInstance().reference.child("Challenge/" + auth.currentUser?.uid)
-                                    .child("Day$p")
+                                    .child("Day${position}")
                             storageReference.downloadUrl.addOnSuccessListener { uri ->
                                 Glide.with(view).load(uri).into(img)
                             }.addOnFailureListener { exception -> }
