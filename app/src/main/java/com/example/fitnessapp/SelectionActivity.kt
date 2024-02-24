@@ -1,6 +1,7 @@
 package com.example.fitnessapp
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
@@ -27,6 +28,8 @@ class SelectionActivity : AppCompatActivity() {
     lateinit var bindSelect: ActivitySelectionBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var StorageReference: StorageReference
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var editor: SharedPreferences.Editor
     override fun onCreate(savedInstanceState: Bundle?) {
         bindSelect = ActivitySelectionBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
@@ -37,14 +40,29 @@ class SelectionActivity : AppCompatActivity() {
         profile()
 
 //        profile()
+        sharedPreferences = applicationContext.getSharedPreferences("selectAct", MODE_PRIVATE)
+        editor = sharedPreferences.edit()
+
+        editor.putString("Workout","-")
+
         bindSelect.workout.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             Log.d("hello", "onCreate: $bindSelect.")
+            editor.putString("act","workout")
+            editor.commit()
+        }
+
+        bindSelect.yoga.setOnClickListener{
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            editor.putString("act","yoga")
+            editor.commit()
         }
         bindSelect.profile.setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
+
         }
 
 

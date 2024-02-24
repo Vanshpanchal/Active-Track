@@ -3,16 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/itemMain"
-    android:layout_marginVertical="0.5sp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/light_grey">
+    android:layout_height="42dp"
+    android:layout_marginVertical="1sp"
+    android:layout_marginHorizontal="4sp"
+    android:background="@drawable/item_bg">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:weightSum="7"
+        android:weightSum="8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -20,6 +21,7 @@
         <TextView
             android:id="@+id/serial_no"
             android:layout_width="0dp"
+            android:layout_gravity="center"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:paddingVertical="8sp"
@@ -37,6 +39,7 @@
         <TextView
             android:id="@+id/bmi"
             android:layout_width="0dp"
+            android:layout_gravity="center"
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:paddingVertical="8sp"
@@ -57,6 +60,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="4"
+            android:layout_gravity="center"
             android:paddingVertical="8sp"
             android:textAlignment="center"
             android:textColor="@color/black"
@@ -64,6 +68,18 @@
             android:textStyle="bold"
             tools:text="29 Jul 2023 11:25:22" />
 
+        <ImageView
+            android:id="@+id/act_logo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingVertical="8sp"
+            android:textAlignment="center"
+            android:src="@drawable/meditation"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            tools:text="1" />
     </LinearLayout>
 
 

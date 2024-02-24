@@ -50,7 +50,7 @@
             android:text="@string/date"
             android:textAlignment="center"
             android:textAllCaps="true"
-            android:textColor="?colorPrimary"
+            android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -93,7 +93,7 @@
             android:text="@string/rep_duration"
             android:textAlignment="center"
             android:textAllCaps="true"
-            android:textColor="?colorPrimary"
+            android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -117,16 +117,16 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearlayout4"
+        android:id="@+id/linearlayout_4"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingVertical="8sp"
-        app:layout_constraintBottom_toBottomOf="@+id/linearlayout5"
+        app:layout_constraintBottom_toBottomOf="@+id/linearlayout_5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/linearlayout5"
-        app:layout_constraintTop_toTopOf="@+id/linearlayout5"
+        app:layout_constraintStart_toEndOf="@+id/linearlayout_5"
+        app:layout_constraintTop_toTopOf="@+id/linearlayout_5"
         app:layout_constraintVertical_bias="0.0">
 
         <TextView
@@ -137,7 +137,7 @@
             android:text="@string/end_duration"
             android:textAlignment="center"
             android:textAllCaps="true"
-            android:textColor="?colorPrimary"
+            android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -162,13 +162,13 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearlayout5"
+        android:id="@+id/linearlayout_5"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginTop="15sp"
+        android:orientation="vertical"
         android:paddingVertical="8sp"
-        app:layout_constraintEnd_toStartOf="@+id/linearlayout4"
+        app:layout_constraintEnd_toStartOf="@+id/linearlayout_4"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearlayout1">
@@ -181,7 +181,7 @@
             android:text="@string/start_duration"
             android:textAlignment="center"
             android:textAllCaps="true"
-            android:textColor="?colorPrimary"
+            android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -213,10 +213,11 @@
         android:layout_marginTop="15sp"
         android:text="@string/close"
         android:textSize="22sp"
+        android:textAllCaps="true"
         app:cornerRadius="5sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearlayout5" />
+        app:layout_constraintTop_toBottomOf="@+id/linearlayout_5" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

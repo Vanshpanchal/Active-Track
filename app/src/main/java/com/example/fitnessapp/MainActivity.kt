@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.RadioButton
 import com.example.fitnessapp.databinding.ActivityMainBinding
 import com.google.firebase.Timestamp
@@ -21,6 +22,8 @@ class MainActivity : AppCompatActivity() {
     private var exercisetimer: Long = 0
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: Editor
+    private lateinit var sharedPreferences_1: SharedPreferences
+    private lateinit var editor_1: Editor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bindMain = ActivityMainBinding.inflate(layoutInflater)
@@ -28,6 +31,8 @@ class MainActivity : AppCompatActivity() {
 
         sharedPreferences = getSharedPreferences("ExercisePref", MODE_PRIVATE)
         editor = sharedPreferences.edit()
+
+
 
         bindMain?.flStart?.setOnClickListener {
             val c = Calendar.getInstance()
@@ -64,6 +69,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        sharedPreferences_1 = applicationContext.getSharedPreferences("selectAct", MODE_PRIVATE)
+        editor_1 = sharedPreferences.edit()
+        val value = sharedPreferences_1.getString("act", "0")
+        if (value == "workout") {
+            bindMain!!.radioGroup.visibility = View.VISIBLE
+            exercisetimer = 30
+        }else{
+            bindMain!!.radioGroup.visibility = View.GONE
+            exercisetimer = 20
+        }
 
     }
 }

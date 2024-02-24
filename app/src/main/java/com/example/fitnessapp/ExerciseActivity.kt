@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fitnessapp.databinding.ActivityExerciseBinding
 import com.example.fitnessapp.databinding.ConfirmationDialogBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.util.Locale
 
 class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
@@ -33,6 +34,8 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var exerciseAdapter: ExerciseAdapter? = null
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: Editor
+    private lateinit var sharedPreferences_1: SharedPreferences
+    private lateinit var editor_1: Editor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -44,20 +47,35 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
 
+
         sharedPreferences = applicationContext.getSharedPreferences("ExercisePref", MODE_PRIVATE)
         editor = sharedPreferences.edit()
-        val duration = sharedPreferences.getLong("Duration", 30)
+        var duration = sharedPreferences.getLong("Duration", 30)
         val startDuration = sharedPreferences.getString("Start_time", "")
-        Log.d("hello", "onCreate: $duration $startDuration")
+        Log.d("hello", "___onCreate: $duration $startDuration")
         // debug
         exerciseDuration = 1
         exerciseTimerDuration = 1
+
 
         // Actual Initialization
 //        exerciseDuration = duration
 //        exerciseTimerDuration = duration.toInt()
 
-        exerciseList = Constants.ExerciseList()
+
+        sharedPreferences_1 = applicationContext.getSharedPreferences("selectAct", MODE_PRIVATE)
+        editor_1 = sharedPreferences.edit()
+
+        val value = sharedPreferences_1.getString("act", "0")
+        Log.d("act_check", "onCreate: $value")
+
+        if (value == "workout") {
+            exerciseList = Constants.ExerciseList()
+
+        } else {
+            exerciseList = Constantone.ExerciseList()
+
+        }
 
         bindExercise?.actionbar?.setNavigationOnClickListener {
             customBackBtn()
@@ -192,22 +210,38 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private fun customBackBtn() {
 
 
-        val dialog = Dialog(this)
-        val layout = ConfirmationDialogBinding.inflate(layoutInflater)
-        dialog.setContentView(layout.root)
-        dialog.setCanceledOnTouchOutside(false)
+//        val dialog = Dialog(this)
+//        val layout = ConfirmationDialogBinding.inflate(layoutInflater)
+//        dialog.setContentView(layout.root)
+//        dialog.setCanceledOnTouchOutside(false)
+//
+//        layout.no.setOnClickListener {
+//            dialog.dismiss()
+//            Log.d("Btn", "No Clicked")
+//        }
+//        layout.yes.setOnClickListener {
+//            this@ExerciseActivity.finish()
+//            Log.d("Btn", "Yes Clicked")
+//            dialog.dismiss()
+//        }
+//
+//        dialog.show()
 
-        layout.no.setOnClickListener {
-            dialog.dismiss()
-            Log.d("Btn", "No Clicked")
-        }
-        layout.yes.setOnClickListener {
-            this@ExerciseActivity.finish()
-            Log.d("Btn", "Yes Clicked")
-            dialog.dismiss()
-        }
-
-        dialog.show()
+        MaterialAlertDialogBuilder(
+            this@ExerciseActivity,
+            R.style.ThemeOverlay_App_MaterialAlertDialog
+        )
+            .setTitle("Quit?")
+            .setIcon(R.drawable.dialog_logo)
+            .setMessage("Are You sure you want to quit?")
+            .setPositiveButton("Yes") { dialog, which ->
+                this@ExerciseActivity.finish()
+                dialog.dismiss()
+            }
+            .setNegativeButton("No") { dialog, which ->
+                dialog.dismiss()
+            }
+            .show();
     }
 
     @Deprecated("Deprecated in Java")

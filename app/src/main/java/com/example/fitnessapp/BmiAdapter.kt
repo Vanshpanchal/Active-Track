@@ -29,6 +29,7 @@ class BmiAdapter(private val items: ArrayList<bmiEntry>) :
         val dateEntry = binding.date
         val bmiBox = binding.bmi
         val view = binding.view
+        val act_logo = binding.actLogo
 
         init {
             itemView.setOnClickListener {
@@ -55,6 +56,7 @@ class BmiAdapter(private val items: ArrayList<bmiEntry>) :
     override fun onBindViewHolder(holder: myViewHolder, position: Int) {
         holder.bmiBox.visibility = View.VISIBLE
         holder.view.visibility = View.VISIBLE
+
         val date = items[position].time.toString()
         Log.d("hello", "onBindViewHolder: ${items[position].height.toString()}")
         holder.dateEntry.text = date
@@ -65,32 +67,28 @@ class BmiAdapter(private val items: ArrayList<bmiEntry>) :
         val bmi_value = items[position].bmi?.toFloat()
         if (bmi_value != null) {
             if (bmi_value < 18.5) {
-                holder.bmiBox.setBackgroundColor(
-                    Color.parseColor("#00aef0")
-                )
+
+                holder.act_logo.setImageResource(R.drawable.bluecircle)
+
             } else if (bmi_value > 30.0) {
-                holder.bmiBox.setBackgroundColor(
-                    Color.parseColor("#b41818")
-                )
+//                holder.bmiBox.setBackgroundColor(
+//                    Color.parseColor("#b41818")
+//                )
+                holder.act_logo.setImageResource(R.drawable.redcircle)
             } else if (bmi_value in 25.0..30.0) {
-                holder.bmiBox.setBackgroundColor(
-                    Color.parseColor("#ff9f00")
-                )
+
+                holder.act_logo.setImageResource(R.drawable.yellowcircle)
             } else {
-                holder.bmiBox.setBackgroundColor(
-                    Color.parseColor("#388E3C")
-                )
+
+                holder.act_logo.setImageResource(R.drawable.greencircle)
             }
         }
         if (position % 2 == 0) {
-            holder.main.setBackgroundColor(
-                Color.parseColor("#DCDCDF")
-            )
+            holder.main.setBackgroundResource(R.drawable.item_bg)
+
 
         } else {
-            holder.main.setBackgroundColor(
-                Color.parseColor("#FFFFFF")
-            )
+            holder.main.setBackgroundResource(R.drawable.item_bg2)
         }
     }
 }

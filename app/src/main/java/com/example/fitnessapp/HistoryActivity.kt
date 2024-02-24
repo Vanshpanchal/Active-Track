@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
@@ -34,6 +35,7 @@ class HistoryActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var bmiList: ArrayList<bmiEntry>
     private lateinit var previewDialog: BottomSheetDialog
+    private lateinit var previewDialog2: BottomSheetDialog
     private lateinit var filterDialog: BottomSheetDialog
     private lateinit var ActivityList: ArrayList<ActivtyEntry>
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +46,8 @@ class HistoryActivity : AppCompatActivity() {
         bindHistory?.filter?.visibility = View.INVISIBLE
         setSupportActionBar(bindHistory?.actionbar)
         previewDialog = BottomSheetDialog(this)
+        previewDialog2 = BottomSheetDialog(this)
+
         filterDialog = BottomSheetDialog(this)
         if (supportActionBar != null) {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -87,7 +91,7 @@ class HistoryActivity : AppCompatActivity() {
                     bindHistory?.status?.visibility = View.INVISIBLE
                     bindHistory?.filter?.visibility = View.INVISIBLE
                     activeRadio = "EXERCISE"
-                    if(ActivityList.size<=0){
+                    if (ActivityList.size <= 0) {
                         bindHistory?.status1?.visibility = View.VISIBLE
                     }
                 }
@@ -101,15 +105,58 @@ class HistoryActivity : AppCompatActivity() {
                     activeRadio = "BMI"
 //                    bmiList.clear()
 //                    getBmiData()
-                    if (bmiList.size<=0){
+                    if (bmiList.size <= 0) {
                         bindHistory?.status?.visibility = View.VISIBLE
                     }
                     bindHistory?.rvBmi?.adapter = BmiAdapter(bmiList)
                     val bmiAdapter = BmiAdapter(bmiList)
                     bindHistory!!.rvBmi.adapter = bmiAdapter
 
+//                    click preview
                     bmiAdapter.onItem(object : BmiAdapter.onitemclickB {
                         override fun itemClickListener(position: Int) {
+                            Log.d("items", "itemClickListener: ")
+                            val view =
+                                View.inflate(this@HistoryActivity, R.layout.activity_preview, null)
+                            previewDialog2.setContentView(view)
+
+                            val weight = bmiList[position].weight
+                            val height = bmiList[position].height
+                            var finalheight = ""
+                            var finalweight = ""
+
+                            if (height != null && weight != null) {
+                                if (height.contains("'")){
+                                    finalheight = "$height Inch"
+                                }else{
+                                    finalheight = "$height Cm"
+                                }
+                                if (weight.contains(".")){
+                                    finalweight = "$weight Pounds"
+                                }else{
+                                    finalweight = "$weight Kg"
+                                }
+
+                            }
+                            view.findViewById<LinearLayout>(R.id.linearlayout_4).visibility =
+                                View.GONE
+
+                            view.findViewById<LinearLayout>(R.id.linearlayout_5).visibility =
+                                View.GONE
+                            view.findViewById<TextView>(R.id.one).text =
+                                "BMI Data"
+                            view.findViewById<TextView>(R.id.textView).text =
+                                "Weight"
+                            view.findViewById<TextView>(R.id.rep_label).text =
+                                "Height"
+                            view.findViewById<TextView>(R.id.date_field).text =
+                                finalweight
+                            view.findViewById<TextView>(R.id.rep_field).text =
+                                finalheight
+                            view.findViewById<Button>(R.id.btn_Close).setOnClickListener {
+                                previewDialog2.dismiss()
+                            }
+                            previewDialog2.show()
                         }
 
                     })
@@ -131,13 +178,54 @@ class HistoryActivity : AppCompatActivity() {
                 val underWeight = view.findViewById<CheckBox>(R.id.checkBox2)
                 val overWeight = view.findViewById<CheckBox>(R.id.checkBox3)
                 val obseity = view.findViewById<CheckBox>(R.id.checkBox4)
-                btn.setOnClickListener{
+                btn.setOnClickListener {
                     bindHistory?.rvBmi?.adapter = BmiAdapter(bmiList)
                     val bmiAdapter = BmiAdapter(bmiList)
                     bindHistory!!.rvBmi.adapter = bmiAdapter
 
                     bmiAdapter.onItem(object : BmiAdapter.onitemclickB {
                         override fun itemClickListener(position: Int) {
+                            val view =
+                                View.inflate(this@HistoryActivity, R.layout.activity_preview, null)
+                            previewDialog2.setContentView(view)
+
+                            val weight = bmiList[position].weight
+                            val height = bmiList[position].height
+                            var finalheight = ""
+                            var finalweight = ""
+
+                            if (height != null && weight != null) {
+                                if (height.contains("'")){
+                                    finalheight = "$height Inch"
+                                }else{
+                                    finalheight = "$height Cm"
+                                }
+                                if (weight.contains(".")){
+                                    finalweight = "$weight Pounds"
+                                }else{
+                                    finalweight = "$weight Kg"
+                                }
+
+                            }
+                            view.findViewById<LinearLayout>(R.id.linearlayout_4).visibility =
+                                View.GONE
+
+                            view.findViewById<LinearLayout>(R.id.linearlayout_5).visibility =
+                                View.GONE
+                            view.findViewById<TextView>(R.id.one).text =
+                                "BMI Data"
+                            view.findViewById<TextView>(R.id.textView).text =
+                                "Weight"
+                            view.findViewById<TextView>(R.id.rep_label).text =
+                                "Height"
+                            view.findViewById<TextView>(R.id.date_field).text =
+                                finalweight
+                            view.findViewById<TextView>(R.id.rep_field).text =
+                                finalheight
+                            view.findViewById<Button>(R.id.btn_Close).setOnClickListener {
+                                previewDialog2.dismiss()
+                            }
+                            previewDialog2.show()
                         }
 
                     })
@@ -147,7 +235,7 @@ class HistoryActivity : AppCompatActivity() {
                     val b: ArrayList<bmiEntry> = ArrayList()
                     Log.d("75", "onCreate: ${obseity.isChecked}")
                     filterDialog.dismiss()
-                    if(obseity.isChecked || healthy.isChecked || overWeight.isChecked || underWeight.isChecked) {
+                    if (obseity.isChecked || healthy.isChecked || overWeight.isChecked || underWeight.isChecked) {
 
 
                         if (obseity.isChecked) {
@@ -186,16 +274,99 @@ class HistoryActivity : AppCompatActivity() {
 
                         bmiAdapter.onItem(object : BmiAdapter.onitemclickB {
                             override fun itemClickListener(position: Int) {
+                                val view =
+                                    View.inflate(this@HistoryActivity, R.layout.activity_preview, null)
+                                previewDialog2.setContentView(view)
+
+                                val weight = bmiList[position].weight
+                                val height = bmiList[position].height
+                                var finalheight = ""
+                                var finalweight = ""
+
+                                if (height != null && weight != null) {
+                                    if (height.contains("'")){
+                                        finalheight = "$height Inch"
+                                    }else{
+                                        finalheight = "$height Cm"
+                                    }
+                                    if (weight.contains(".")){
+                                        finalweight = "$weight Pounds"
+                                    }else{
+                                        finalweight = "$weight Kg"
+                                    }
+
+                                }
+                                view.findViewById<LinearLayout>(R.id.linearlayout_4).visibility =
+                                    View.GONE
+
+                                view.findViewById<LinearLayout>(R.id.linearlayout_5).visibility =
+                                    View.GONE
+                                view.findViewById<TextView>(R.id.one).text =
+                                    "BMI Data"
+                                view.findViewById<TextView>(R.id.textView).text =
+                                    "Weight"
+                                view.findViewById<TextView>(R.id.rep_label).text =
+                                    "Height"
+                                view.findViewById<TextView>(R.id.date_field).text =
+                                    finalweight
+                                view.findViewById<TextView>(R.id.rep_field).text =
+                                    finalheight
+                                view.findViewById<Button>(R.id.btn_Close).setOnClickListener {
+                                    previewDialog2.dismiss()
+                                }
+                                previewDialog2.show()
                             }
 
                         })
-                    }else{
+                    } else {
                         bindHistory?.rvBmi?.adapter = BmiAdapter(bmiList)
                         val bmiAdapter = BmiAdapter(bmiList)
                         bindHistory!!.rvBmi.adapter = bmiAdapter
 
                         bmiAdapter.onItem(object : BmiAdapter.onitemclickB {
                             override fun itemClickListener(position: Int) {
+                                Log.d("items", "itemClickListener: hello ")
+                                val view =
+                                    View.inflate(this@HistoryActivity, R.layout.activity_preview, null)
+                                previewDialog2.setContentView(view)
+
+                                val weight = bmiList[position].weight
+                                val height = bmiList[position].height
+                                var finalheight = ""
+                                var finalweight = ""
+
+                                if (height != null && weight != null) {
+                                    if (height.contains("'")){
+                                        finalheight = "$height Inch"
+                                    }else{
+                                        finalheight = "$height Cm"
+                                    }
+                                    if (weight.contains(".")){
+                                        finalweight = "$weight Pounds"
+                                    }else{
+                                        finalweight = "$weight Kg"
+                                    }
+
+                                }
+                                view.findViewById<LinearLayout>(R.id.linearlayout_4).visibility =
+                                    View.GONE
+
+                                view.findViewById<LinearLayout>(R.id.linearlayout_5).visibility =
+                                    View.GONE
+                                view.findViewById<TextView>(R.id.one).text =
+                                    "BMI Data"
+                                view.findViewById<TextView>(R.id.textView).text =
+                                    "Weight"
+                                view.findViewById<TextView>(R.id.rep_label).text =
+                                    "Height"
+                                view.findViewById<TextView>(R.id.date_field).text =
+                                    finalweight
+                                view.findViewById<TextView>(R.id.rep_field).text =
+                                    finalheight
+                                view.findViewById<Button>(R.id.btn_Close).setOnClickListener {
+                                    previewDialog2.dismiss()
+                                }
+                                previewDialog2.show()
                             }
 
                         })
@@ -276,14 +447,18 @@ class HistoryActivity : AppCompatActivity() {
                         }
                     }
                     Log.d("hello", "getBmiData: $bmiList")
-                    bindHistory?.rvBmi?.adapter = BmiAdapter(bmiList)
-                    val bmiAdapter = BmiAdapter(bmiList)
-                    bindHistory!!.rvBmi.adapter = bmiAdapter
+//                    bindHistory?.rvBmi?.adapter = BmiAdapter(bmiList)
+//                    val bmiAdapter = BmiAdapter(bmiList)
+//                    bindHistory!!.rvBmi.adapter = bmiAdapter
 
-                    bmiAdapter.onItem(object : BmiAdapter.onitemclickB {
+                    val rec = bindHistory?.rvBmi
+                    val adapter = BmiAdapter(bmiList)
+                    rec?.adapter = adapter
+
+                    adapter.onItem(object : BmiAdapter.onitemclickB {
                         override fun itemClickListener(position: Int) {
+                            Log.d("items", "itemClickListener: $position ")
                         }
-
                     })
                 }
             }
@@ -294,6 +469,10 @@ class HistoryActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
 
         firestore.collection("Activity").document(auth.currentUser?.uid!!).collection("myActivity")
+            .orderBy(
+                "Date",
+                Query.Direction.DESCENDING
+            )
             .get()
             .addOnSuccessListener { it ->
                 if (!it.isEmpty) {

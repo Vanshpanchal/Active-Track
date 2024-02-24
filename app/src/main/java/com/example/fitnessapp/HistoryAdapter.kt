@@ -6,6 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fitnessapp.databinding.HistoryItemBinding
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.TextStyle
+import java.util.Locale
 
 class HistoryAdapter(private val items: ArrayList<ActivtyEntry>) :
     RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
@@ -28,6 +33,7 @@ class HistoryAdapter(private val items: ArrayList<ActivtyEntry>) :
         val dateEntry = binding.date
         val one = binding.bmi
         val two = binding.view
+        val act_logo = binding.actLogo
 
         init {
             itemView.setOnClickListener {
@@ -53,22 +59,37 @@ class HistoryAdapter(private val items: ArrayList<ActivtyEntry>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 //        val date: Int = items[position]
         val date = items[position].Date
-        val obj = date?.toDate().toString()
-        val str = obj.substringBefore("G")
-        holder.dateEntry.text = str
+        val obj = date?.toDate()
+        val timeZone = ZoneId.of("UTC")
+        val localDateTime =
+            LocalDateTime.ofInstant(Instant.ofEpochMilli(obj?.time!!), timeZone)
+        val year = localDateTime.year.toString()
+        val month = localDateTime.month.getDisplayName(
+            TextStyle.SHORT,
+            Locale.getDefault()
+        ).toString()
+        val day = localDateTime.dayOfMonth.toString()
+        val exercise_date = "$day $month $year"
+        holder.dateEntry.text = exercise_date
         holder.one.visibility = View.GONE
         holder.two.visibility = View.GONE
+
+        val repDuration = items[position].ExerciseDuration?.toInt()
+        if (repDuration != null) {
+            if(repDuration>=30){
+                holder.act_logo.setImageResource(R.drawable.fit_icon)
+            }else{
+                holder.act_logo.setImageResource(R.drawable.meditation)
+            }
+        }
         holder.serialNo.text = (position + 1).toString()
 
         if (position % 2 == 0) {
-            holder.main.setBackgroundColor(
-                Color.parseColor("#DCDCDF")
-            )
+            holder.main.setBackgroundResource(R.drawable.item_bg)
+
 
         } else {
-            holder.main.setBackgroundColor(
-                Color.parseColor("#FFFFFF")
-            )
+            holder.main.setBackgroundResource(R.drawable.item_bg2)
         }
 
     }
