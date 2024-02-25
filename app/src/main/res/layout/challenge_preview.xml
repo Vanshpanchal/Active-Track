@@ -2,9 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dailogp_main"
     android:layout_width="match_parent"
-    android:paddingBottom="15sp"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingBottom="15sp">
 
     <View
         android:id="@+id/view2"
@@ -16,10 +17,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageButton
+        android:id="@+id/sharingBtn"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="15sp"
+        android:layout_marginEnd="25sp"
+        android:background="@color/transparent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/sharebtn"
+        app:layout_constraintBottom_toBottomOf="@+id/date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view2" />
 
     <TextView
         android:id="@+id/date"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:paddingVertical="8sp"
@@ -28,14 +41,16 @@
         android:textColor="?colorPrimary"
         android:textSize="20sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view2" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/prog_img"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        app:cardCornerRadius="100sp"
         android:layout_marginTop="15sp"
+        app:cardCornerRadius="100sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/date">
@@ -45,70 +60,82 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/home"
-            android:tag="Null"
             android:scaleType="centerCrop"
             android:src="@drawable/baseline_person_24"
+            android:tag="Null"
             android:visibility="visible" />
     </androidx.cardview.widget.CardView>
 
 
     <CheckBox
         android:id="@+id/task_1"
-        android:layout_marginTop="28sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="25sp"
+        android:layout_marginTop="28sp"
         android:text="@string/follow_a_healthy_diet"
         app:layout_constraintTop_toBottomOf="@+id/prog_img" />
 
     <CheckBox
         android:id="@+id/task_2"
-        android:layout_marginTop="8sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="25sp"
+        android:layout_marginTop="8sp"
         android:text="@string/_2_x_45_min_workouts"
         app:layout_constraintTop_toBottomOf="@+id/task_1" />
 
     <CheckBox
         android:id="@+id/task_3"
-        android:layout_marginTop="8sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="25sp"
+        android:layout_marginTop="8sp"
         android:text="@string/drink_a_gallon_of_water"
         app:layout_constraintTop_toBottomOf="@+id/task_2" />
 
     <CheckBox
         android:id="@+id/task_4"
-        android:layout_marginTop="8sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="25sp"
+        android:layout_marginTop="8sp"
         android:text="@string/read_10_pages_of_non_fiction"
         app:layout_constraintTop_toBottomOf="@+id/task_3" />
 
     <CheckBox
         android:id="@+id/task_5"
-        android:layout_marginTop="8sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="25sp"
+        android:layout_marginTop="8sp"
         android:text="@string/take_progress_picture"
         app:layout_constraintTop_toBottomOf="@+id/task_4" />
 
     <TextView
-        style="@style/Widget.Material3.TextInputEditText.OutlinedBox.Dense"
+        android:id="@+id/learning_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="5dp"
+        android:layout_marginBottom="2sp"
+        android:text="@string/learning"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/learning"
+        app:layout_constraintStart_toStartOf="@+id/task_5" />
+
+    <TextView
         android:id="@+id/learning"
+        style="@style/Widget.Material3.TextInputEditText.OutlinedBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="25dp"
-        android:layout_marginTop="15sp"
+        android:layout_marginTop="25sp"
+        android:layout_marginBottom="25dp"
         android:paddingHorizontal="5dp"
         android:paddingVertical="5dp"
-        android:textColor="@color/black"
         android:text="@string/app_name"
-        android:layout_marginBottom="25dp"
+        android:textColor="@color/black"
         app:layout_constraintTop_toBottomOf="@+id/task_5"
         tools:layout_editor_absoluteX="-25dp" />
 

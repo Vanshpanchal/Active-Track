@@ -74,10 +74,12 @@ class MainActivity : AppCompatActivity() {
         val value = sharedPreferences_1.getString("act", "0")
         if (value == "workout") {
             bindMain!!.radioGroup.visibility = View.VISIBLE
+            bindMain!!.ivLogo.setImageResource(R.drawable.home_workout_written)
             exercisetimer = 30
         }else{
             bindMain!!.radioGroup.visibility = View.GONE
             exercisetimer = 20
+            bindMain!!.ivLogo.setImageResource(R.drawable.home_yoga_written)
         }
 
     }

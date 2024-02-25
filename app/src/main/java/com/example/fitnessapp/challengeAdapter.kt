@@ -29,6 +29,7 @@ class challengeAdapter(private val items: ArrayList<challengeEntry>) :
         val entry = binding.date
         val one = binding.bmi
         val two = binding.view
+        val act_logo = binding.actLogo
 
         init {
             itemView.setOnClickListener {
@@ -53,16 +54,17 @@ class challengeAdapter(private val items: ArrayList<challengeEntry>) :
 //        holder.dateEntry.text = str
         holder.one.visibility = View.GONE
         holder.two.visibility = View.GONE
+        holder.act_logo.visibility = View.GONE
         holder.serialNo.text = (position + 1).toString()
         holder.entry.text = "Day ${(position + 1)}"
         if (position % 2 == 0) {
-            holder.main.setBackgroundColor(
-                Color.parseColor("#DCDCDF")
+            holder.main.setBackgroundResource(
+               R.drawable.item_bg
             )
 
         } else {
-            holder.main.setBackgroundColor(
-                Color.parseColor("#FFFFFF")
+            holder.main.setBackgroundResource(
+                R.drawable.item_bg2
             )
         }
     }
