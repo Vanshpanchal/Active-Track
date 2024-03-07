@@ -16,10 +16,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:titleTextColor="@color/dark_blue"
-        tools:title="APP NAME" />
+        tools:title="MEDITATION" />
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/quote_card"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="15sp"
         android:orientation="vertical"

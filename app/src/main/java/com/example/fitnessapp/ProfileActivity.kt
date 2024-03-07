@@ -318,14 +318,17 @@ class ProfileActivity : AppCompatActivity() {
                     }
 
                     4 -> {
-                        val linearLayout = bindProfile.profilemain
-
-                        // Convert the LinearLayout to a bitmap
-                        val bitmap = viewToBitmap(linearLayout)
-
-                        // Share the bitmap
-                        shareBitmap(this@ProfileActivity, bitmap)
+//                        val linearLayout = bindProfile.profilemain
+//
+//                        // Convert the LinearLayout to a bitmap
+//                        val bitmap = viewToBitmap(linearLayout)
+//
+//                        // Share the bitmap
+//                        shareBitmap(this@ProfileActivity, bitmap)
 //                        initialChallenge()
+                        intent = Intent(this@ProfileActivity, Music_Activity::class.java)
+                        startActivity(intent)
+
                     }
 
                     5 -> {
