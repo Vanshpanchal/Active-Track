@@ -22,7 +22,7 @@
     <ImageView
         android:id="@+id/iv_exercise"
         android:layout_width="match_parent"
-        android:layout_height="215dp"
+        android:layout_height="300dp"
         android:contentDescription="@string/exercise_name"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toTopOf="@+id/tv_statement"

@@ -326,8 +326,8 @@ class ProfileActivity : AppCompatActivity() {
 //                        // Share the bitmap
 //                        shareBitmap(this@ProfileActivity, bitmap)
 //                        initialChallenge()
-                        intent = Intent(this@ProfileActivity, Music_Activity::class.java)
-                        startActivity(intent)
+//                        intent = Intent(this@ProfileActivity, Music_Activity::class.java)
+//                        startActivity(intent)
 
                     }
 

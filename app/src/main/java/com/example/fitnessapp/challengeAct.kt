@@ -599,7 +599,7 @@ class challengeAct : AppCompatActivity() {
         val streakEntry = hashMapOf(
             "Streak" to streak,
             "Status" to sts,
-            "Reminder" to false //debug
+            "Reminder" to true //debug // march 18
         )
         fsStore.collection("Streak").document(auth.currentUser?.uid!!)
             .collection("mystreak").document(auth.currentUser?.uid!! + "Streak").get()
