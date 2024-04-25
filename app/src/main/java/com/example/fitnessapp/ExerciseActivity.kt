@@ -21,7 +21,7 @@ import java.util.Locale
 class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var restProgress = 0
     private var exerciseProgress = 0
-    private var restDuration: Long = 1 // Actual It was 10 , for debug it is change to 1
+    private var restDuration: Long = 10 // Actual It was 10 , for debug it is change to 1
     private var exerciseDuration: Long = 1
     private var exerciseTimerDuration: Int = 1
     private var restTimer: CountDownTimer? = null
@@ -58,9 +58,9 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         exerciseTimerDuration = 1
 
 
-        // Actual Initialization
-//        exerciseDuration = duration
-//        exerciseTimerDuration = duration.toInt()
+//         Actual Initialization
+        exerciseDuration = duration
+        exerciseTimerDuration = duration.toInt()
 
 
         sharedPreferences_1 = applicationContext.getSharedPreferences("selectAct", MODE_PRIVATE)

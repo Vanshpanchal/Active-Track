@@ -4,7 +4,7 @@ object Constantone {
     fun ExerciseList(): ArrayList<ExerciseModel> {
         val e_list = ArrayList<ExerciseModel>()
 
-        val pushUp = ExerciseModel(1, "HASTASANA", R.drawable.hastasana, false, false)
+        val pushUp = ExerciseModel(1, "HASTASANA", R.drawable.hastasana_one, false, false)
         e_list.add(pushUp)
 
         val plank = ExerciseModel(2, "UTTANASANA", R.drawable.uttanasana, false, false)
