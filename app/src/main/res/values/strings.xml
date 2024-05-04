@@ -87,4 +87,14 @@
     <string name="timer">Timer</string>
     <string name="learning">Learning:</string>
     <string name="quote">If you want to lift yourself up, lift up someone else.</string>
+    <string name="intro">Welcome to Active Track, where fitness meets convenience and innovation. We\'re dedicated to helping individuals lead healthier, happier lives with our comprehensive fitness solution right in the palm of their hand.</string>
+    <string name="psg_1">Our app stands out with its user-centric design and cutting-edge technology, offering:\n \n
+- Workouts: \t\tAccess tailored workout routines by fitness professionals.\n \n
+- BMI Tracking: \tMonitor body mass index (BMI) to understand body composition.\n \n
+- Progress Tracking: \tStay motivated with detailed insights and analytics.\n \n
+- 75 Hard Challenge: \tTake on a mental toughness program for body and mind transformation.\n
+- Yoga and Home Workouts: \tAccess yoga and home workout routines.\n \n
+- Daily Reminder &amp; Streak Management: \tStay on track with our daily reminder feature and track your streaks.\n
+
+</string>
 </resources>

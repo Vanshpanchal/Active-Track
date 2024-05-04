@@ -246,7 +246,7 @@ class ProfileActivity : AppCompatActivity() {
                 "75 HARD CHALLENGE",
                 "EDIT PROFILE PIC",
                 "RESET PASSWORD",
-                "SUPPORT",
+                "ABOUT US",
                 "LOGOUT"
             )
         val IconID: Array<Int> = arrayOf(
@@ -254,7 +254,7 @@ class ProfileActivity : AppCompatActivity() {
             R.drawable.baseline_fitness_center_24,
             R.drawable.baseline_account_circle_24,
             R.drawable.baseline_lock_reset_24,
-            R.drawable.baseline_support_agent_24,
+            R.drawable.about_us,
             R.drawable.baseline_logout_24
         )
         DataList = arrayListOf()
@@ -318,16 +318,9 @@ class ProfileActivity : AppCompatActivity() {
                     }
 
                     4 -> {
-//                        val linearLayout = bindProfile.profilemain
 //
-//                        // Convert the LinearLayout to a bitmap
-//                        val bitmap = viewToBitmap(linearLayout)
-//
-//                        // Share the bitmap
-//                        shareBitmap(this@ProfileActivity, bitmap)
-//                        initialChallenge()
-//                        intent = Intent(this@ProfileActivity, Music_Activity::class.java)
-//                        startActivity(intent)
+                        intent = Intent(this@ProfileActivity, about_act::class.java)
+                        startActivity(intent)
 
                     }
 
