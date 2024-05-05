@@ -18,9 +18,9 @@ class Notification : BroadcastReceiver() {
 
         val pendingIntent = PendingIntent.getActivity(context,0,i, PendingIntent.FLAG_IMMUTABLE)
         val builder = NotificationCompat.Builder(context!!,"APP")
-            .setContentText("Hello")
+            .setContentText("📝 It's time to write your daily log entry!")
             .setSmallIcon(R.drawable.streak_icon)
-            .setContentTitle("hello")
+            .setContentTitle("75 Hard Challenge")
             .setAutoCancel(true)
             .setBadgeIconType(BADGE_ICON_SMALL)
             .setDefaults(Notification.DEFAULT_ALL)

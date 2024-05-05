@@ -316,7 +316,7 @@ class challengeAct : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel =
                 NotificationChannel("APP", channelName, NotificationManager.IMPORTANCE_HIGH)
-            channel.description = "Namaste"
+            channel.description = "Reminder for 75 Hard Challenge"
             val notificationManager =
                 getSystemService(NotificationManager::class.java)
 
