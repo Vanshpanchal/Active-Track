@@ -54,8 +54,8 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         val startDuration = sharedPreferences.getString("Start_time", "")
         Log.d("hello", "___onCreate: $duration $startDuration")
         // debug
-        exerciseDuration = 1
-        exerciseTimerDuration = 1
+//        exerciseDuration = 1
+//        exerciseTimerDuration = 1
 
 
 //         Actual Initialization
