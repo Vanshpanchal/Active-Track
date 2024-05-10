@@ -1,38 +1,75 @@
-# Fit in 7 - Exercise App
-![Apk](https://github.com/Vanshpanchal/Fit-In-7/blob/580325edb543bb9357a5a52abe34fc8057753f9d/Fit%20In%207.apk)
+# Active Track
 
-Fit in 7 is an exercise app designed to help you stay fit and active with a simple yet effective workout routine. The app provides 12 different exercises, each lasting for 30 seconds, followed by a 10-second break for relaxation before moving on to the next exercise. Whether you're a fitness enthusiast or just starting your fitness journey, Fit in 7 has got you covered!
+Fitness Buddy is a health and fitness tracking app designed to help users manage their workouts, track their progress, and stay motivated on their fitness journey. The app includes features such as user profile management, BMI calculator and tracking, yoga and home workout tracking, 75 Hard Challenge tracking, daily reminders, streak management, and progress sharing.
 
-## Key Features
+## Features
 
-- 12 Exercise Routine: Fit in 7 offers a curated set of 12 exercises that target various muscle groups and provide a well-rounded workout experience.
+### User Profile Management
+- Allows users to create and manage their profiles.
+- Users can set up their personal information including name, age, weight, and height.
 
-- Timer with Voice Guidance: Each exercise is timed precisely for 30 seconds, and you'll receive voice guidance through Text-to-Speech (TTS) to notify you about the name of the next exercise and when to start and end each exercise. After every exercise, a 10-second break is provided for you to catch your breath and get ready for the next challenge.
+### BMI Calculator & Tracking
+- Calculates BMI based on user input of weight and height.
+- Tracks BMI over time to monitor progress.
 
-- BMI Calculator: The app includes a BMI (Body Mass Index) module that helps you calculate your BMI based on either metric units (kilograms and centimeters) or US units (pounds and inches).
+### Yoga & Home Workout Tracking
+- Provides predefined sets of yoga and home workout routines.
+- Allows users to track completed workouts and log their progress.
 
-- Workout History: Fit in 7 keeps track of your exercise completion dates using the History module. This data is stored using Room Database, ensuring that your workout progress is saved and can be easily accessed.
+### 75 Hard Challenge
+- Tracks progress and completion of the 75 Hard Challenge.
+- Correlates with streak management and daily reminders.
 
-## Screenshots
+### Daily Reminder
+- Sends reminders to users to log their daily activities and workouts.
+- Helps users stay consistent with their fitness routine.
 
-![previews (2)](https://github.com/Vanshpanchal/Fit-In-7/assets/83567205/6be91928-1345-4121-b42b-c599b02a9e47)
+### Streak Management
+- Tracks streaks of completed activities.
+- Maintains streaks for daily workouts and other activities related to the 75 Hard Challenge.
+
+### Sharing Progress
+- Allows users to share their fitness progress with friends and social networks.
+- Encourages accountability and support within the community.
+
+## Technologies Used
+
+- Kotlin: Primary programming language for Android app development.
+- XML: Markup language used for designing user interfaces.
+- Firebase: Backend services for user authentication, database, and cloud functions.
+- Firebase Authentication: Handles user authentication and authorization.
+- Firebase Realtime Database: Stores user data and fitness tracking information.
+- Firebase Cloud Functions: Used for sending daily reminders and managing streaks.
+
+## Getting Started
+
+### Prerequisites
+
+- Android Studio
+- Firebase account
 
 ### Installation
 
-1. Clone the repository to your local machine.
+1. Clone the repository to your local machine:
 
-```bash
-git clone https://github.com/your_username/fit-in-7.git
-```
+   ```bash
+   git clone https://github.com/your-username/active-track.git
+   ```
 
-2. Open the project in your preferred IDE (Android Studio or Xcode).
+2. Open the project in Android Studio.
 
-3. Build and run the app on your device.
+3. Set up Firebase for your project:
+   - Create a new Firebase project in the Firebase console.
+   - Add your Android app to the Firebase project.
+   - Download the `google-services.json` file and add it to your project.
+   - Enable Firebase Authentication and Firebase Realtime Database services.
 
-## How to Use
+4. Run the app on an Android emulator or physical device.
 
-1. **Exercise Routine**: Launch the Fit in 7 app, and you'll be presented with the 12 exercises. Tap on the "Start Workout" button to begin the routine. The timer will automatically start with the first exercise, and you'll receive voice guidance through TTS to let you know the name of the next exercise and when to start and stop each exercise. Complete each exercise for 30 seconds and take a 10-second break between exercises.
+## Acknowledgments
 
-2. **BMI Calculator**: To use the BMI module, navigate to the "BMI Calculator" section in the app. Enter your weight and height either in metric or US units, and the app will calculate your BMI and display the result.
+- This app is inspired by the 75 Hard Challenge created by Andy Frisella.
+- Special thanks to Firebase for providing backend services.
 
-3. **Workout History**: The app automatically records the completion date of each full exercise routine. You can access this data in the "History" section of the app. It allows you to track your workout progress over time.
+---
+
