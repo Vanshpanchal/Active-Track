@@ -2,6 +2,10 @@
 
 Fitness Buddy is a health and fitness tracking app designed to help users manage their workouts, track their progress, and stay motivated on their fitness journey. The app includes features such as user profile management, BMI calculator and tracking, yoga and home workout tracking, 75 Hard Challenge tracking, daily reminders, streak management, and progress sharing.
 
+## Preview Layout
+![1](https://github.com/Vanshpanchal/Active-Track/assets/83567205/ec6bf0fc-8ce5-4c08-a443-6a6fe6c271cb)
+![2](https://github.com/Vanshpanchal/Active-Track/assets/83567205/97ba7a78-bf26-4259-bf08-255522f6587e)
+
 ## Features
 
 ### User Profile Management
